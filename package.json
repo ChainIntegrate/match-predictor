@@ -1,0 +1,25 @@
+{
+  "name": "match-predictor",
+  "version": "1.0.0",
+  "description": "Esperimento: NFT collegati a risultati sportivi reali tramite oracolo centralizzato su LUKSO",
+  "license": "MIT",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network luksoTestnet",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network luksoMainnet",
+    "oracle": "node oracle/reportResult.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.0",
+    "dotenv": "^16.4.5"
+  },
+  "dependencies": {
+    "@lukso/lsp8-contracts": "^0.16.0",
+    "@lukso/lsp4-contracts": "^0.16.0",
+    "@erc725/smart-contracts": "^7.0.0",
+    "ethers": "^6.13.0",
+    "node-fetch": "^2.7.0"
+  }
+}

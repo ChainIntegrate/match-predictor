@@ -1,0 +1,8 @@
+node_modules/
+.env
+artifacts/
+cache/
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp

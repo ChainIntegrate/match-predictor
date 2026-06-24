@@ -476,6 +476,14 @@
     </div>
     <button class="btn-admin-submit" id="btn-admin-submit">Crea match on-chain</button>
     <div class="admin-result" id="admin-result"></div>
+
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);">
+      <div class="admin-label">Imposta metadata collezione (una tantum)</div>
+      <button class="btn-admin-submit" id="btn-set-metadata" style="background: var(--mint-dim);">
+        Imposta metadata su IPFS
+      </button>
+      <div class="admin-result" id="metadata-result"></div>
+    </div>
   </div>
 
   <div id="matches-container">
@@ -496,7 +504,7 @@
   // CONFIGURAZIONE — personalizza questi valori prima del deploy
   // ============================================================
   const CONFIG = {
-    CONTRACT_ADDRESS: "0xD5Db5829F441839896D816B82e2e38a4fD4ceaB2",
+    CONTRACT_ADDRESS: "0x8a0102d262fB37B39cDF5bB8A3935Ba9E4f15797",
     RPC_URL: "https://rpc.testnet.lukso.network",
     CHAIN_ID_HEX: "0x1069", // 4201 = LUKSO testnet. Mainnet: 0x2A (42)
     EXPLORER_BASE: "https://explorer.lukso.network/address/",
@@ -536,6 +544,7 @@
     "function predict(uint256 matchId, uint8 predictedResult) external",
     "function claim(uint256 matchId) external",
     "function createMatch(string teamHome, string teamAway, uint256 predictionDeadline) external returns (uint256)",
+    "function setData(bytes32 dataKey, bytes dataValue) external",
     "function owner() external view returns (address)",
     "function getMatch(uint256 matchId) external view returns (tuple(string teamHome, string teamAway, uint256 predictionDeadline, bool resolved, uint8 actualResult, bool exists))",
     "function predictions(uint256 matchId, address wallet) external view returns (uint8)",
@@ -573,7 +582,9 @@
     adminKickoffDate: document.getElementById("admin-kickoff-date"),
     adminKickoffTime: document.getElementById("admin-kickoff-time"),
     btnAdminSubmit: document.getElementById("btn-admin-submit"),
-    adminResult: document.getElementById("admin-result")
+    adminResult: document.getElementById("admin-result"),
+    btnSetMetadata: document.getElementById("btn-set-metadata"),
+    metadataResult: document.getElementById("metadata-result")
   };
 
   els.explorerLink.href = CONFIG.EXPLORER_BASE + CONFIG.CONTRACT_ADDRESS;
@@ -654,7 +665,7 @@
     els.upAvatar.classList.add("placeholder");
 
     try {
-      const { ERC725 } = await import("https://cdn.jsdelivr.net/npm/@erc725/erc725.js@0.28.4/+esm")
+      const { ERC725 } = await import("https://cdn.jsdelivr.net/npm/@erc725/erc725.js@0.28.2/+esm")
         .catch(() => ({ ERC725: null }));
 
       if (!ERC725) {
@@ -943,6 +954,59 @@
     } finally {
       els.btnAdminSubmit.disabled = false;
       els.btnAdminSubmit.textContent = "Crea match on-chain";
+    }
+  });
+
+  els.btnSetMetadata.addEventListener("click", async () => {
+    const METADATA_JSON_CID = "bafkreihuvhznkea7wj3nwmgyxjoot3cw6i4phlxhrcta6kutjqzbuh6owu";
+
+    els.btnSetMetadata.disabled = true;
+    els.btnSetMetadata.textContent = "Preparazione dati…";
+    els.metadataResult.textContent = "";
+
+    try {
+      const { ERC725 } = await import("https://cdn.jsdelivr.net/npm/@erc725/erc725.js@0.28.2/+esm");
+
+      const lsp4Schema = [
+        {
+          name: "LSP4Metadata",
+          key: "0x9afb95cacc9f95858ec44aa8c3b685511002e30ae54415823f406128b85b238e",
+          keyType: "Singleton",
+          valueType: "bytes",
+          valueContent: "VerifiableURI"
+        }
+      ];
+
+      // Recupera il JSON dei metadata già pinnato, per calcolare correttamente
+      // l'hash di verifica all'interno della VerifiableURI codificata
+      const metadataResponse = await fetch(`${CONFIG.IPFS_GATEWAY}${METADATA_JSON_CID}`);
+      const metadataJson = await metadataResponse.json();
+
+      const encoded = ERC725.encodeData(
+        [
+          {
+            keyName: "LSP4Metadata",
+            value: {
+              json: metadataJson,
+              url: `ipfs://${METADATA_JSON_CID}`
+            }
+          }
+        ],
+        lsp4Schema
+      );
+
+      els.btnSetMetadata.textContent = "Conferma nella tua estensione UP…";
+      const tx = await contract.setData(encoded.keys[0], encoded.values[0]);
+      els.metadataResult.textContent = "Transazione inviata, attendo confirmazione on-chain…";
+
+      await tx.wait();
+      els.metadataResult.textContent = "✅ Metadata impostati con successo. Potrebbero volerci alcuni minuti prima che l'estensione UP li mostri.";
+    } catch (err) {
+      console.error(err);
+      els.metadataResult.textContent = parseContractError(err);
+    } finally {
+      els.btnSetMetadata.disabled = false;
+      els.btnSetMetadata.textContent = "Imposta metadata su IPFS";
     }
   });
 

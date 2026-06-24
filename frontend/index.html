@@ -321,6 +321,88 @@
     color: var(--mint);
   }
 
+  /* --- Admin panel (solo owner) --- */
+  .admin-panel {
+    background: var(--card);
+    border: 1px solid var(--whistle);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 32px;
+    display: none;
+  }
+
+  .admin-panel.visible {
+    display: block;
+  }
+
+  .admin-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--whistle);
+    margin-bottom: 16px;
+  }
+
+  .admin-field {
+    margin-bottom: 12px;
+  }
+
+  .admin-field label {
+    display: block;
+    font-size: 12px;
+    color: var(--chalk-dim);
+    margin-bottom: 6px;
+  }
+
+  .admin-field input {
+    width: 100%;
+    background: var(--pitch-mid);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--chalk);
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  .admin-field input:focus {
+    outline: none;
+    border-color: var(--mint);
+  }
+
+  .admin-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .btn-admin-submit {
+    width: 100%;
+    background: var(--whistle);
+    color: var(--chalk);
+    margin-top: 4px;
+  }
+
+  .admin-result {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--chalk-dim);
+    word-break: break-all;
+  }
+
+  .admin-toggle {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .btn-admin-toggle {
+    background: transparent;
+    border: 1px dashed var(--line);
+    color: var(--chalk-dim);
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+
   footer {
     text-align: center;
     padding: 32px 20px 48px;
@@ -368,6 +450,34 @@
     <button class="btn-connect" id="btn-connect">Connetti UP</button>
   </div>
 
+  <div class="admin-toggle" id="admin-toggle-wrapper" style="display: none;">
+    <button class="btn-admin-toggle" id="btn-admin-toggle">⚙ Pannello admin (crea match)</button>
+  </div>
+
+  <div class="admin-panel" id="admin-panel">
+    <div class="admin-label">Crea nuova partita — solo owner</div>
+    <div class="admin-field">
+      <label>Squadra Casa</label>
+      <input type="text" id="admin-team-home" placeholder="es. Italia">
+    </div>
+    <div class="admin-field">
+      <label>Squadra Trasferta</label>
+      <input type="text" id="admin-team-away" placeholder="es. Brasile">
+    </div>
+    <div class="admin-row">
+      <div class="admin-field">
+        <label>Data kickoff</label>
+        <input type="date" id="admin-kickoff-date">
+      </div>
+      <div class="admin-field">
+        <label>Ora kickoff (UTC)</label>
+        <input type="time" id="admin-kickoff-time">
+      </div>
+    </div>
+    <button class="btn-admin-submit" id="btn-admin-submit">Crea match on-chain</button>
+    <div class="admin-result" id="admin-result"></div>
+  </div>
+
   <div id="matches-container">
     <!-- Le partite vengono generate dinamicamente da JS -->
   </div>
@@ -386,9 +496,9 @@
   // CONFIGURAZIONE — personalizza questi valori prima del deploy
   // ============================================================
   const CONFIG = {
-    CONTRACT_ADDRESS: "0x0000000000000000000000000000000000000000", // ← inserisci dopo il deploy
-    RPC_URL: "https://rpc.lukso.gateway.fm",
-    CHAIN_ID_HEX: "0x2A", // 42 = LUKSO mainnet. Testnet: 0x1069 (4201)
+    CONTRACT_ADDRESS: "0xD5Db5829F441839896D816B82e2e38a4fD4ceaB2",
+    RPC_URL: "https://rpc.testnet.lukso.network",
+    CHAIN_ID_HEX: "0x1069", // 4201 = LUKSO testnet. Mainnet: 0x2A (42)
     EXPLORER_BASE: "https://explorer.lukso.network/address/",
     IPFS_GATEWAY: "https://api.universalprofile.cloud/ipfs/",
 
@@ -425,10 +535,13 @@
   const CONTRACT_ABI = [
     "function predict(uint256 matchId, uint8 predictedResult) external",
     "function claim(uint256 matchId) external",
+    "function createMatch(string teamHome, string teamAway, uint256 predictionDeadline) external returns (uint256)",
+    "function owner() external view returns (address)",
     "function getMatch(uint256 matchId) external view returns (tuple(string teamHome, string teamAway, uint256 predictionDeadline, bool resolved, uint8 actualResult, bool exists))",
     "function predictions(uint256 matchId, address wallet) external view returns (uint8)",
     "function claimed(uint256 matchId, address wallet) external view returns (bool)",
-    "function hasWon(uint256 matchId, address wallet) external view returns (bool)"
+    "function hasWon(uint256 matchId, address wallet) external view returns (bool)",
+    "event MatchCreated(uint256 indexed matchId, string teamHome, string teamAway, uint256 predictionDeadline)"
   ];
 
   const RESULT_LABELS = { 1: "Casa", 2: "Pareggio", 3: "Trasferta" };
@@ -451,7 +564,16 @@
     upAddress: document.getElementById("up-address"),
     matchesContainer: document.getElementById("matches-container"),
     globalStatus: document.getElementById("global-status"),
-    explorerLink: document.getElementById("explorer-link")
+    explorerLink: document.getElementById("explorer-link"),
+    adminToggleWrapper: document.getElementById("admin-toggle-wrapper"),
+    btnAdminToggle: document.getElementById("btn-admin-toggle"),
+    adminPanel: document.getElementById("admin-panel"),
+    adminTeamHome: document.getElementById("admin-team-home"),
+    adminTeamAway: document.getElementById("admin-team-away"),
+    adminKickoffDate: document.getElementById("admin-kickoff-date"),
+    adminKickoffTime: document.getElementById("admin-kickoff-time"),
+    btnAdminSubmit: document.getElementById("btn-admin-submit"),
+    adminResult: document.getElementById("admin-result")
   };
 
   els.explorerLink.href = CONFIG.EXPLORER_BASE + CONFIG.CONTRACT_ADDRESS;
@@ -500,12 +622,27 @@
       els.upAddress.textContent = shortAddr(userAddress);
 
       await loadProfileMetadata(userAddress);
+      await checkIfOwner();
       await renderMatches();
 
       setStatus("");
     } catch (err) {
       console.error(err);
       setStatus("Connessione annullata o non riuscita.", true);
+    }
+  }
+
+  // ============================================================
+  // VERIFICA OWNER (mostra pannello admin solo se l'address connesso è owner)
+  // ============================================================
+  async function checkIfOwner() {
+    try {
+      const ownerAddress = await readContract.owner();
+      const isOwner = ownerAddress.toLowerCase() === userAddress.toLowerCase();
+      els.adminToggleWrapper.style.display = isOwner ? "block" : "none";
+    } catch (err) {
+      console.warn("Impossibile verificare l'owner:", err);
+      els.adminToggleWrapper.style.display = "none";
     }
   }
 
@@ -748,9 +885,66 @@
     if (raw.includes("AlreadyClaimed")) return "Hai già riscattato il premio per questa partita.";
     if (raw.includes("PredictionWasIncorrect")) return "Il tuo pronostico non era corretto.";
     if (raw.includes("MatchNotResolvedYet")) return "Il risultato non è ancora stato riportato.";
+    if (raw.includes("DeadlineMustBeFuture")) return "La deadline deve essere nel futuro.";
+    if (raw.includes("Ownable")) return "Solo l'owner del contratto può creare partite.";
     if (raw.includes("user rejected") || raw.includes("ACTION_REJECTED")) return "Transazione annullata.";
     return "Si è verificato un errore: " + raw;
   }
+
+  // ============================================================
+  // PANNELLO ADMIN: toggle + creazione match
+  // ============================================================
+  els.btnAdminToggle.addEventListener("click", () => {
+    els.adminPanel.classList.toggle("visible");
+  });
+
+  els.btnAdminSubmit.addEventListener("click", async () => {
+    const teamHome = els.adminTeamHome.value.trim();
+    const teamAway = els.adminTeamAway.value.trim();
+    const dateVal = els.adminKickoffDate.value;
+    const timeVal = els.adminKickoffTime.value;
+
+    if (!teamHome || !teamAway || !dateVal || !timeVal) {
+      els.adminResult.textContent = "Compila tutti i campi prima di procedere.";
+      return;
+    }
+
+    const kickoffUtc = new Date(`${dateVal}T${timeVal}:00Z`);
+    const deadlineSeconds = Math.floor(kickoffUtc.getTime() / 1000);
+
+    if (deadlineSeconds <= Math.floor(Date.now() / 1000)) {
+      els.adminResult.textContent = "La data/ora deve essere nel futuro.";
+      return;
+    }
+
+    els.btnAdminSubmit.disabled = true;
+    els.btnAdminSubmit.textContent = "Conferma nella tua estensione UP…";
+    els.adminResult.textContent = "";
+
+    try {
+      const tx = await contract.createMatch(teamHome, teamAway, deadlineSeconds);
+      els.adminResult.textContent = "Transazione inviata, attendo confirmazione on-chain…";
+      const receipt = await tx.wait();
+
+      const event = receipt.logs
+        .map((log) => {
+          try { return contract.interface.parseLog(log); } catch { return null; }
+        })
+        .find((parsed) => parsed?.name === "MatchCreated");
+
+      const matchId = event ? event.args.matchId.toString() : "?";
+      els.adminResult.textContent = `✅ Match creato con ID ${matchId}. Aggiungi questo ID a CONFIG.MATCHES nel codice per mostrarlo nella lista pubblica.`;
+
+      els.adminTeamHome.value = "";
+      els.adminTeamAway.value = "";
+    } catch (err) {
+      console.error(err);
+      els.adminResult.textContent = parseContractError(err);
+    } finally {
+      els.btnAdminSubmit.disabled = false;
+      els.btnAdminSubmit.textContent = "Crea match on-chain";
+    }
+  });
 
   // ============================================================
   // INIT

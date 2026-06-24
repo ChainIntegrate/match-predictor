@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MatchPredictor — On-chain World Cup 2026 predictions</title>
+<title>MatchPredictor — Pronostici on-chain, Mondiale 2026</title>
 <style>
   :root {
     --pitch-black: #0B1F17;
@@ -321,7 +321,7 @@
     color: var(--mint);
   }
 
-  /* --- Admin panel (owner only) --- */
+  /* --- Admin panel (solo owner) --- */
   .admin-panel {
     background: var(--card);
     border: 1px solid var(--whistle);
@@ -429,11 +429,8 @@
   <div class="eyebrow">LUKSO · FIFA World Cup 2026</div>
   <h1>MatchPredictor</h1>
   <p class="subtitle">
-    Predict the outcome of the semi-finals and the final. On-chain, verifiable,
-    no middleman. Winners get an NFT to keep.
-  </p>
-  <p class="subtitle" style="margin-top: 12px; font-size: 13px;">
-    <a href="/index-it.html" style="color: var(--mint);">🇮🇹 Versione italiana</a>
+    Pronostica i risultati delle semifinali e della finale. On-chain, verificabile,
+    nessun intermediario. Chi indovina riceve un NFT ricordo.
   </p>
 </header>
 
@@ -448,49 +445,49 @@
       </div>
     </div>
     <div id="up-disconnected" style="color: var(--chalk-dim); font-size: 14px;">
-      Connect your Universal Profile to predict
+      Connetti la tua Universal Profile per pronosticare
     </div>
-    <button class="btn-connect" id="btn-connect">Connect UP</button>
+    <button class="btn-connect" id="btn-connect">Connetti UP</button>
   </div>
 
   <div class="admin-toggle" id="admin-toggle-wrapper" style="display: none;">
-    <button class="btn-admin-toggle" id="btn-admin-toggle">⚙ Admin panel (create match)</button>
+    <button class="btn-admin-toggle" id="btn-admin-toggle">⚙ Pannello admin (crea match)</button>
   </div>
 
   <div class="admin-panel" id="admin-panel">
-    <div class="admin-label">Create new match — owner only</div>
+    <div class="admin-label">Crea nuova partita — solo owner</div>
     <div class="admin-field">
-      <label>Home team</label>
-      <input type="text" id="admin-team-home" placeholder="e.g. Italy">
+      <label>Squadra Casa</label>
+      <input type="text" id="admin-team-home" placeholder="es. Italia">
     </div>
     <div class="admin-field">
-      <label>Away team</label>
-      <input type="text" id="admin-team-away" placeholder="e.g. Brazil">
+      <label>Squadra Trasferta</label>
+      <input type="text" id="admin-team-away" placeholder="es. Brasile">
     </div>
     <div class="admin-row">
       <div class="admin-field">
-        <label>Kickoff date</label>
+        <label>Data kickoff</label>
         <input type="date" id="admin-kickoff-date">
       </div>
       <div class="admin-field">
-        <label>Kickoff time (UTC)</label>
+        <label>Ora kickoff (UTC)</label>
         <input type="time" id="admin-kickoff-time">
       </div>
     </div>
-    <button class="btn-admin-submit" id="btn-admin-submit">Create match on-chain</button>
+    <button class="btn-admin-submit" id="btn-admin-submit">Crea match on-chain</button>
     <div class="admin-result" id="admin-result"></div>
 
     <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);">
-      <div class="admin-label">Set collection metadata (one-time)</div>
+      <div class="admin-label">Imposta metadata collezione (una tantum)</div>
       <button class="btn-admin-submit" id="btn-set-metadata" style="background: var(--mint-dim);">
-        Set metadata on IPFS
+        Imposta metadata su IPFS
       </button>
       <div class="admin-result" id="metadata-result"></div>
     </div>
   </div>
 
   <div id="matches-container">
-    <!-- Matches are generated dynamically by JS -->
+    <!-- Le partite vengono generate dinamicamente da JS -->
   </div>
 
   <div class="status-msg" id="global-status"></div>
@@ -498,13 +495,13 @@
 </main>
 
 <footer>
-  Contract verifiable on <a href="#" id="explorer-link" target="_blank">Blockscout</a> ·
-  Built on LUKSO with Universal Profile
+  Contratto verificabile su <a href="#" id="explorer-link" target="_blank">Blockscout</a> ·
+  Costruito su LUKSO con Universal Profile
 </footer>
 
 <script type="module">
   // ============================================================
-  // CONFIG — customize these values before deploying
+  // CONFIGURAZIONE — personalizza questi valori prima del deploy
   // ============================================================
   const CONFIG = {
     CONTRACT_ADDRESS: "0x8a0102d262fB37B39cDF5bB8A3935Ba9E4f15797",
@@ -513,20 +510,20 @@
     EXPLORER_BASE: "https://explorer.lukso.network/address/",
     IPFS_GATEWAY: "https://api.universalprofile.cloud/ipfs/",
 
-    // Launch matches — teams to update once known (TBD until quarter-finals end)
+    // Le 3 partite del lancio — squadre da aggiornare quando note (TBD finché non finiscono i quarti)
     MATCHES: [
     {
   contractMatchId: 1,
   teamHome: "Switzerland",
   teamAway: "Canada",
-  label: "Group B",
+  label: "Gruppo B",
   kickoff: "2026-06-24T19:00:00Z",
   venue: "World Cup 2026"
 },
     ]
   };
 
-  // Minimal ABI needed by the frontend
+  // ABI minimale necessario al frontend
   const CONTRACT_ABI = [
     "function predict(uint256 matchId, uint8 predictedResult) external",
     "function claim(uint256 matchId) external",
@@ -540,10 +537,10 @@
     "event MatchCreated(uint256 indexed matchId, string teamHome, string teamAway, uint256 predictionDeadline)"
   ];
 
-  const RESULT_LABELS = { 1: "Home", 2: "Draw", 3: "Away" };
+  const RESULT_LABELS = { 1: "Casa", 2: "Pareggio", 3: "Trasferta" };
 
   // ============================================================
-  // GLOBAL STATE
+  // STATO GLOBALE
   // ============================================================
   let provider = null;
   let signer = null;
@@ -586,12 +583,12 @@
   }
 
   // ============================================================
-  // UNIVERSAL PROFILE CONNECTION
+  // CONNESSIONE UNIVERSAL PROFILE
   // ============================================================
   async function connectUP() {
     if (!window.lukso) {
       setStatus(
-        "Universal Profile extension not found. Install it from universalprofile.cloud to continue.",
+        "Estensione Universal Profile non trovata. Installala da universalprofile.cloud per continuare.",
         true
       );
       return;
@@ -615,7 +612,7 @@
 
       els.upDisconnected.style.display = "none";
       els.upIdentity.style.display = "flex";
-      els.btnConnect.textContent = "Connected";
+      els.btnConnect.textContent = "Connesso";
       els.btnConnect.disabled = true;
       els.upAddress.textContent = shortAddr(userAddress);
 
@@ -626,12 +623,12 @@
       setStatus("");
     } catch (err) {
       console.error(err);
-      setStatus("Connection cancelled or failed.", true);
+      setStatus("Connessione annullata o non riuscita.", true);
     }
   }
 
   // ============================================================
-  // OWNER CHECK (show admin panel only if connected address is owner)
+  // VERIFICA OWNER (mostra pannello admin solo se l'address connesso è owner)
   // ============================================================
   async function checkIfOwner() {
     try {
@@ -639,13 +636,13 @@
       const isOwner = ownerAddress.toLowerCase() === userAddress.toLowerCase();
       els.adminToggleWrapper.style.display = isOwner ? "block" : "none";
     } catch (err) {
-      console.warn("Could not verify owner:", err);
+      console.warn("Impossibile verificare l'owner:", err);
       els.adminToggleWrapper.style.display = "none";
     }
   }
 
   // ============================================================
-  // LSP3 PROFILE READ (name + image)
+  // LETTURA PROFILO LSP3 (nome + immagine)
   // ============================================================
   async function loadProfileMetadata(address) {
     els.upName.textContent = shortAddr(address);
@@ -656,8 +653,8 @@
         .catch(() => ({ ERC725: null }));
 
       if (!ERC725) {
-        // Fallback: erc725.js not always available via public CDN —
-        // if loading fails, we stay with the shortened address.
+        // Fallback: erc725.js non sempre disponibile via CDN pubblico —
+        // se il caricamento fallisce, restiamo con l'indirizzo abbreviato.
         return;
       }
 
@@ -688,14 +685,14 @@
         els.upAvatar.classList.remove("placeholder");
       }
     } catch (err) {
-      // Profile without LSP3 metadata set, or IPFS network error:
-      // we stay with the shortened address, no experience blocking.
-      console.warn("Could not load LSP3 profile:", err);
+      // Profilo senza metadata LSP3 impostata, o errore di rete IPFS:
+      // si resta con l'indirizzo abbreviato, nessun blocco dell'esperienza.
+      console.warn("Impossibile caricare il profilo LSP3:", err);
     }
   }
 
   // ============================================================
-  // RENDER MATCHES
+  // RENDER PARTITE
   // ============================================================
   async function renderMatches() {
     els.matchesContainer.innerHTML = "";
@@ -723,8 +720,8 @@
         ? await readContract.claimed(matchConfig.contractMatchId, userAddress)
         : false;
     } catch (err) {
-      // Match not yet created on-chain: we still show the informational card
-      console.warn(`Match ${matchConfig.contractMatchId} not found on-chain`, err);
+      // Match non ancora creato on-chain: mostriamo comunque la card informativa
+      console.warn(`Match ${matchConfig.contractMatchId} non trovato on-chain`, err);
     }
 
     const now = Date.now();
@@ -738,10 +735,10 @@
     const teamHome = onChainMatch?.teamHome || matchConfig.teamHome;
     const teamAway = onChainMatch?.teamAway || matchConfig.teamAway;
 
-    let statusLabel = "Predictions open";
+    let statusLabel = "Pronostici aperti";
     let statusClass = "";
-    if (!predictionsOpen && !resolved) { statusLabel = "Predictions closed"; statusClass = "closed"; }
-    if (resolved) { statusLabel = "Settled"; statusClass = "closed"; }
+    if (!predictionsOpen && !resolved) { statusLabel = "Pronostici chiusi"; statusClass = "closed"; }
+    if (resolved) { statusLabel = "Risolta"; statusClass = "closed"; }
 
     wrapper.innerHTML = `
       <div class="match-label">
@@ -758,11 +755,11 @@
       </div>
     `;
 
-    // --- Prediction / result / claim section ---
+    // --- Sezione pronostico / risultato / claim ---
     if (!userAddress) {
       const hint = document.createElement("div");
       hint.className = "match-meta";
-      hint.textContent = "Connect your UP to predict.";
+      hint.textContent = "Connetti la tua UP per pronosticare.";
       wrapper.appendChild(hint);
       return wrapper;
     }
@@ -773,13 +770,13 @@
 
       if (myPrediction === 0) {
         banner.className = "result-banner";
-        banner.textContent = `Final result: ${RESULT_LABELS[actualResult]}. You didn't predict this match.`;
+        banner.textContent = `Risultato finale: ${RESULT_LABELS[actualResult]}. Non avevi pronosticato questa partita.`;
       } else if (won) {
         banner.className = "result-banner win";
-        banner.textContent = `You got it right! Result: ${RESULT_LABELS[actualResult]}.`;
+        banner.textContent = `Hai indovinato! Risultato: ${RESULT_LABELS[actualResult]}.`;
       } else {
         banner.className = "result-banner lose";
-        banner.textContent = `Final result: ${RESULT_LABELS[actualResult]}. Your prediction (${RESULT_LABELS[myPrediction]}) wasn't correct.`;
+        banner.textContent = `Risultato finale: ${RESULT_LABELS[actualResult]}. Il tuo pronostico (${RESULT_LABELS[myPrediction]}) non era corretto.`;
       }
       wrapper.appendChild(banner);
 
@@ -788,7 +785,7 @@
         claimRow.className = "claim-row";
         const claimBtn = document.createElement("button");
         claimBtn.className = "btn-claim" + (alreadyClaimed ? " claimed" : "");
-        claimBtn.textContent = alreadyClaimed ? "NFT already claimed ✓" : "Claim your NFT";
+        claimBtn.textContent = alreadyClaimed ? "NFT già ricevuto ✓" : "Riscatta il tuo NFT";
         claimBtn.disabled = alreadyClaimed;
         claimBtn.onclick = () => handleClaim(matchConfig.contractMatchId, claimBtn);
         claimRow.appendChild(claimBtn);
@@ -797,7 +794,7 @@
       return wrapper;
     }
 
-    // Match not resolved: show the three prediction buttons
+    // Match non risolto: mostra i tre bottoni di pronostico
     const predictRow = document.createElement("div");
     predictRow.className = "predict-row";
 
@@ -818,12 +815,12 @@
     if (myPrediction !== 0) {
       const note = document.createElement("div");
       note.className = "match-meta";
-      note.textContent = `You predicted: ${RESULT_LABELS[myPrediction]}. The result will be reported after the match.`;
+      note.textContent = `Hai pronosticato: ${RESULT_LABELS[myPrediction]}. Il risultato verrà riportato dopo la partita.`;
       wrapper.appendChild(note);
     } else if (!predictionsOpen) {
       const note = document.createElement("div");
       note.className = "match-meta";
-      note.textContent = "Prediction window closed.";
+      note.textContent = "Finestra di pronostico chiusa.";
       wrapper.appendChild(note);
     }
 
@@ -832,23 +829,23 @@
 
   function formatKickoff(isoString) {
     const date = new Date(isoString);
-    return date.toLocaleString("en-GB", {
+    return date.toLocaleString("it-IT", {
       day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZoneName: "short"
     });
   }
 
   // ============================================================
-  // ACTIONS: PREDICT & CLAIM
+  // AZIONI: PREDICT & CLAIM
   // ============================================================
   async function handlePredict(matchId, resultCode, btn, row) {
     row.querySelectorAll("button").forEach((b) => (b.disabled = true));
-    setStatus("Sending prediction, confirm in your UP extension…");
+    setStatus("Invio pronostico, conferma nella tua estensione UP…");
 
     try {
       const tx = await contract.predict(matchId, resultCode);
-      setStatus("Transaction sent, waiting for on-chain confirmation…");
+      setStatus("Transazione inviata, attendo confirmazione on-chain…");
       await tx.wait();
-      setStatus("Prediction recorded successfully.");
+      setStatus("Pronostico registrato con successo.");
       await renderMatches();
     } catch (err) {
       console.error(err);
@@ -859,38 +856,38 @@
 
   async function handleClaim(matchId, btn) {
     btn.disabled = true;
-    btn.textContent = "Confirm in your UP extension…";
-    setStatus("Claiming NFT…");
+    btn.textContent = "Conferma nella tua estensione UP…";
+    setStatus("Riscatto NFT in corso…");
 
     try {
       const tx = await contract.claim(matchId);
-      setStatus("Transaction sent, waiting for on-chain confirmation…");
+      setStatus("Transazione inviata, attendo confirmazione on-chain…");
       await tx.wait();
-      setStatus("NFT received! Check your Universal Profile.");
+      setStatus("NFT ricevuto! Controlla la tua Universal Profile.");
       await renderMatches();
     } catch (err) {
       console.error(err);
       setStatus(parseContractError(err), true);
       btn.disabled = false;
-      btn.textContent = "Claim your NFT";
+      btn.textContent = "Riscatta il tuo NFT";
     }
   }
 
   function parseContractError(err) {
-    const raw = err?.shortMessage || err?.reason || err?.message || "Unknown error";
-    if (raw.includes("AlreadyPredicted")) return "You already predicted this match.";
-    if (raw.includes("PredictionWindowClosed")) return "The prediction window is closed.";
-    if (raw.includes("AlreadyClaimed")) return "You already claimed the prize for this match.";
-    if (raw.includes("PredictionWasIncorrect")) return "Your prediction wasn't correct.";
-    if (raw.includes("MatchNotResolvedYet")) return "The result hasn't been reported yet.";
-    if (raw.includes("DeadlineMustBeFuture")) return "The deadline must be in the future.";
-    if (raw.includes("Ownable")) return "Only the contract owner can create matches.";
-    if (raw.includes("user rejected") || raw.includes("ACTION_REJECTED")) return "Transaction cancelled.";
-    return "An error occurred: " + raw;
+    const raw = err?.shortMessage || err?.reason || err?.message || "Errore sconosciuto";
+    if (raw.includes("AlreadyPredicted")) return "Hai già pronosticato questa partita.";
+    if (raw.includes("PredictionWindowClosed")) return "La finestra per pronosticare è chiusa.";
+    if (raw.includes("AlreadyClaimed")) return "Hai già riscattato il premio per questa partita.";
+    if (raw.includes("PredictionWasIncorrect")) return "Il tuo pronostico non era corretto.";
+    if (raw.includes("MatchNotResolvedYet")) return "Il risultato non è ancora stato riportato.";
+    if (raw.includes("DeadlineMustBeFuture")) return "La deadline deve essere nel futuro.";
+    if (raw.includes("Ownable")) return "Solo l'owner del contratto può creare partite.";
+    if (raw.includes("user rejected") || raw.includes("ACTION_REJECTED")) return "Transazione annullata.";
+    return "Si è verificato un errore: " + raw;
   }
 
   // ============================================================
-  // ADMIN PANEL: toggle + match creation
+  // PANNELLO ADMIN: toggle + creazione match
   // ============================================================
   els.btnAdminToggle.addEventListener("click", () => {
     els.adminPanel.classList.toggle("visible");
@@ -903,7 +900,7 @@
     const timeVal = els.adminKickoffTime.value;
 
     if (!teamHome || !teamAway || !dateVal || !timeVal) {
-      els.adminResult.textContent = "Fill in all fields before proceeding.";
+      els.adminResult.textContent = "Compila tutti i campi prima di procedere.";
       return;
     }
 
@@ -911,17 +908,17 @@
     const deadlineSeconds = Math.floor(kickoffUtc.getTime() / 1000);
 
     if (deadlineSeconds <= Math.floor(Date.now() / 1000)) {
-      els.adminResult.textContent = "Date/time must be in the future.";
+      els.adminResult.textContent = "La data/ora deve essere nel futuro.";
       return;
     }
 
     els.btnAdminSubmit.disabled = true;
-    els.btnAdminSubmit.textContent = "Confirm in your UP extension…";
+    els.btnAdminSubmit.textContent = "Conferma nella tua estensione UP…";
     els.adminResult.textContent = "";
 
     try {
       const tx = await contract.createMatch(teamHome, teamAway, deadlineSeconds);
-      els.adminResult.textContent = "Transaction sent, waiting for on-chain confirmation…";
+      els.adminResult.textContent = "Transazione inviata, attendo confirmazione on-chain…";
       const receipt = await tx.wait();
 
       const event = receipt.logs
@@ -931,7 +928,7 @@
         .find((parsed) => parsed?.name === "MatchCreated");
 
       const matchId = event ? event.args.matchId.toString() : "?";
-      els.adminResult.textContent = `✅ Match created with ID ${matchId}. Add this ID to CONFIG.MATCHES in the code to show it in the public list.`;
+      els.adminResult.textContent = `✅ Match creato con ID ${matchId}. Aggiungi questo ID a CONFIG.MATCHES nel codice per mostrarlo nella lista pubblica.`;
 
       els.adminTeamHome.value = "";
       els.adminTeamAway.value = "";
@@ -940,7 +937,7 @@
       els.adminResult.textContent = parseContractError(err);
     } finally {
       els.btnAdminSubmit.disabled = false;
-      els.btnAdminSubmit.textContent = "Create match on-chain";
+      els.btnAdminSubmit.textContent = "Crea match on-chain";
     }
   });
 
@@ -948,7 +945,7 @@
     const METADATA_JSON_CID = "bafkreihuvhznkea7wj3nwmgyxjoot3cw6i4phlxhrcta6kutjqzbuh6owu";
 
     els.btnSetMetadata.disabled = true;
-    els.btnSetMetadata.textContent = "Preparing data…";
+    els.btnSetMetadata.textContent = "Preparazione dati…";
     els.metadataResult.textContent = "";
 
     try {
@@ -964,8 +961,8 @@
         }
       ];
 
-      // Fetch the already-pinned metadata JSON, to correctly compute
-      // the verification hash inside the encoded VerifiableURI
+      // Recupera il JSON dei metadata già pinnato, per calcolare correttamente
+      // l'hash di verifica all'interno della VerifiableURI codificata
       const metadataResponse = await fetch(`${CONFIG.IPFS_GATEWAY}${METADATA_JSON_CID}`);
       const metadataJson = await metadataResponse.json();
 
@@ -982,18 +979,18 @@
         lsp4Schema
       );
 
-      els.btnSetMetadata.textContent = "Confirm in your UP extension…";
+      els.btnSetMetadata.textContent = "Conferma nella tua estensione UP…";
       const tx = await contract.setData(encoded.keys[0], encoded.values[0]);
-      els.metadataResult.textContent = "Transaction sent, waiting for on-chain confirmation…";
+      els.metadataResult.textContent = "Transazione inviata, attendo confirmazione on-chain…";
 
       await tx.wait();
-      els.metadataResult.textContent = "✅ Metadata set successfully. It may take a few minutes before the UP extension shows it.";
+      els.metadataResult.textContent = "✅ Metadata impostati con successo. Potrebbero volerci alcuni minuti prima che l'estensione UP li mostri.";
     } catch (err) {
       console.error(err);
       els.metadataResult.textContent = parseContractError(err);
     } finally {
       els.btnSetMetadata.disabled = false;
-      els.btnSetMetadata.textContent = "Set metadata on IPFS";
+      els.btnSetMetadata.textContent = "Imposta metadata su IPFS";
     }
   });
 
@@ -1002,7 +999,7 @@
   // ============================================================
   els.btnConnect.addEventListener("click", connectUP);
 
-  // Show matches even before connecting (public read, no signer)
+  // Mostra le partite anche prima della connessione (lettura pubblica, no signer)
   (async () => {
     try {
       const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.13.4/+esm");
@@ -1014,7 +1011,7 @@
       );
       await renderMatches();
     } catch (err) {
-      console.warn("Initial read failed (normal if contract not yet deployed):", err);
+      console.warn("Lettura iniziale non riuscita (normale se il contratto non è ancora deployato):", err);
     }
   })();
 </script>

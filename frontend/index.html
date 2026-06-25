@@ -278,6 +278,45 @@
     padding: 0 20px 20px;
   }
 
+  /* --- Score banner (exact score from football-data.org) --- */
+  .score-banner {
+    text-align: center;
+    padding: 4px 20px 16px;
+  }
+
+  .score-banner .scoreline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: var(--chalk);
+    background: var(--pitch-mid);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px 18px;
+  }
+
+  .score-banner .scoreline .dash {
+    color: var(--chalk-dim);
+    font-size: 16px;
+  }
+
+  /* --- Prediction count --- */
+  .prediction-count {
+    text-align: center;
+    font-size: 12px;
+    color: var(--mint);
+    padding: 0 20px 14px;
+    letter-spacing: 0.02em;
+  }
+
+  .prediction-count .count-num {
+    font-weight: 700;
+  }
+
   .predict-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -349,6 +388,68 @@
 
   .btn-claim.claimed {
     background: var(--line);
+    color: var(--chalk-dim);
+  }
+
+  /* --- Winners list (visible to connected UP users) --- */
+  .winners-section {
+    margin: 0 20px 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .winners-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--chalk-dim);
+    margin-bottom: 12px;
+  }
+
+  .winners-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .winner-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--pitch-mid);
+    border-radius: 10px;
+    padding: 8px 12px;
+  }
+
+  .winner-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--mint-dim);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .winner-name {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .winner-address {
+    font-size: 11px;
+    color: var(--chalk-dim);
+    font-family: 'Courier New', monospace;
+  }
+
+  .winners-empty {
+    font-size: 13px;
+    color: var(--chalk-dim);
+    font-style: italic;
+  }
+
+  .winners-loading {
+    font-size: 13px;
     color: var(--chalk-dim);
   }
 
@@ -560,6 +661,9 @@
     EXPLORER_BASE: "https://explorer.lukso.network/address/",
     IPFS_GATEWAY: "https://api.universalprofile.cloud/ipfs/",
 
+    // Backend proxy for football-data.org (keeps the API key off the client)
+    SCORE_API_BASE: "https://matchpredictor.chainintegrate.it/api/match-score/",
+
     MATCHES: [
       {
         contractMatchId: 1,
@@ -567,7 +671,8 @@
         teamAway: "Canada",
         label: "Group B",
         kickoff: "2026-06-24T19:00:00Z",
-        venue: "World Cup 2026"
+        venue: "World Cup 2026",
+        footballDataMatchId: 537337
       },
       {
         contractMatchId: 2,
@@ -575,7 +680,8 @@
         teamAway: "Haiti",
         label: "Group C",
         kickoff: "2026-06-24T22:00:00Z",
-        venue: "World Cup 2026"
+        venue: "World Cup 2026",
+        footballDataMatchId: 537344
       },
       {
         contractMatchId: 3,
@@ -583,7 +689,8 @@
         teamAway: "Brazil",
         label: "Group C",
         kickoff: "2026-06-24T22:00:00Z",
-        venue: "World Cup 2026"
+        venue: "World Cup 2026",
+        footballDataMatchId: 537343
       },
       {
         contractMatchId: 4,
@@ -591,7 +698,8 @@
         teamAway: "Mexico",
         label: "Group A",
         kickoff: "2026-06-25T01:00:00Z",
-        venue: "World Cup 2026"
+        venue: "World Cup 2026",
+        footballDataMatchId: 537331
       },
       {
         contractMatchId: 5,
@@ -599,7 +707,8 @@
         teamAway: "South Korea",
         label: "Group A",
         kickoff: "2026-06-25T01:00:00Z",
-        venue: "World Cup 2026"
+        venue: "World Cup 2026",
+        footballDataMatchId: 537332
       },
       {
         contractMatchId: 6,
@@ -607,7 +716,8 @@
         teamAway: "Germany",
         label: "Group E",
         kickoff: "2026-06-25T20:00:00Z",
-        venue: "World Cup 2026"
+        venue: "World Cup 2026",
+        footballDataMatchId: 537355
       },
       {
         contractMatchId: 7,
@@ -615,7 +725,8 @@
         teamAway: "Ivory Coast",
         label: "Group E",
         kickoff: "2026-06-25T20:00:00Z",
-        venue: "World Cup 2026"
+        venue: "World Cup 2026",
+        footballDataMatchId: 537356
       }
     ]
   };
@@ -699,7 +810,8 @@
     "function predictions(uint256 matchId, address wallet) external view returns (uint8)",
     "function claimed(uint256 matchId, address wallet) external view returns (bool)",
     "function hasWon(uint256 matchId, address wallet) external view returns (bool)",
-    "event MatchCreated(uint256 indexed matchId, string teamHome, string teamAway, uint256 predictionDeadline)"
+    "event MatchCreated(uint256 indexed matchId, string teamHome, string teamAway, uint256 predictionDeadline)",
+    "event PredictionMade(uint256 indexed matchId, address indexed predictor, uint8 predictedResult)"
   ];
 
   const RESULT_LABELS = { 1: "Home", 2: "Draw", 3: "Away" };
@@ -712,6 +824,14 @@
   let userAddress = null;
   let contract = null;
   let readContract = null;
+
+  // Cache for exact scores fetched from our backend proxy (avoids
+  // re-fetching the same finished match score on every re-render)
+  const scoreCache = new Map();
+
+  // Cache for LSP3 profile lookups (name + avatar), keyed by address,
+  // shared across all winner lists so the same UP isn't fetched twice
+  const profileCache = new Map();
 
   const els = {
     btnConnect: document.getElementById("btn-connect"),
@@ -826,18 +946,23 @@
   }
 
   // ============================================================
-  // LSP3 PROFILE READ (name + image)
+  // LSP3 PROFILE READ (name + image) — used both for the connected
+  // user's own bar and for each winner shown in a resolved match.
   // ============================================================
-  async function loadProfileMetadata(address) {
-    els.upName.textContent = shortAddr(address);
-    els.upAvatar.classList.add("placeholder");
+  async function fetchProfileMetadata(address) {
+    if (profileCache.has(address)) {
+      return profileCache.get(address);
+    }
+
+    const fallback = { name: shortAddr(address), imageUrl: null };
 
     try {
       const { ERC725 } = await import("https://cdn.jsdelivr.net/npm/@erc725/erc725.js@0.28.2/+esm")
         .catch(() => ({ ERC725: null }));
 
       if (!ERC725) {
-        return;
+        profileCache.set(address, fallback);
+        return fallback;
       }
 
       const lsp3Schema = [
@@ -857,17 +982,73 @@
       const profileData = await erc725.fetchData("LSP3Profile");
       const profile = profileData?.value?.LSP3Profile;
 
-      if (profile?.name) {
-        els.upName.textContent = profile.name;
-      }
+      const result = {
+        name: profile?.name || fallback.name,
+        imageUrl: profile?.profileImage?.[0]?.url
+          ? profile.profileImage[0].url.replace("ipfs://", CONFIG.IPFS_GATEWAY)
+          : null
+      };
 
-      if (profile?.profileImage?.[0]?.url) {
-        const imgUrl = profile.profileImage[0].url.replace("ipfs://", CONFIG.IPFS_GATEWAY);
-        els.upAvatar.src = imgUrl;
-        els.upAvatar.classList.remove("placeholder");
-      }
+      profileCache.set(address, result);
+      return result;
     } catch (err) {
-      console.warn("Could not load LSP3 profile:", err);
+      console.warn(`Could not load LSP3 profile for ${address}:`, err);
+      profileCache.set(address, fallback);
+      return fallback;
+    }
+  }
+
+  async function loadProfileMetadata(address) {
+    els.upName.textContent = shortAddr(address);
+    els.upAvatar.classList.add("placeholder");
+
+    const profile = await fetchProfileMetadata(address);
+    els.upName.textContent = profile.name;
+    if (profile.imageUrl) {
+      els.upAvatar.src = profile.imageUrl;
+      els.upAvatar.classList.remove("placeholder");
+    }
+  }
+
+  // ============================================================
+  // EXACT SCORE (via our backend proxy to football-data.org)
+  // ============================================================
+  async function fetchExactScore(footballDataMatchId) {
+    if (!footballDataMatchId) return null;
+
+    if (scoreCache.has(footballDataMatchId)) {
+      return scoreCache.get(footballDataMatchId);
+    }
+
+    try {
+      const response = await fetch(`${CONFIG.SCORE_API_BASE}${footballDataMatchId}`);
+      if (!response.ok) return null;
+
+      const payload = await response.json();
+      if (!payload.success || !payload.data?.finished) return null;
+
+      scoreCache.set(footballDataMatchId, payload.data);
+      return payload.data;
+    } catch (err) {
+      console.warn(`Could not fetch exact score for match ${footballDataMatchId}:`, err);
+      return null;
+    }
+  }
+
+  // ============================================================
+  // PREDICTIONS COUNT + WINNERS LIST (via on-chain events)
+  // ============================================================
+  async function fetchPredictionEvents(contractMatchId) {
+    try {
+      const filter = readContract.filters.PredictionMade(contractMatchId);
+      const events = await readContract.queryFilter(filter, 0, "latest");
+      return events.map((e) => ({
+        predictor: e.args.predictor,
+        predictedResult: Number(e.args.predictedResult)
+      }));
+    } catch (err) {
+      console.warn(`Could not fetch prediction events for match ${contractMatchId}:`, err);
+      return [];
     }
   }
 
@@ -933,6 +1114,46 @@
         ${matchConfig.venue} · ${formatKickoff(matchConfig.kickoff)}
       </div>
     `;
+
+    // --- Feature 1: exact score, shown for any resolved match, even
+    // before connecting a wallet (it's public information) ---
+    if (resolved && matchConfig.footballDataMatchId) {
+      const scoreContainer = document.createElement("div");
+      scoreContainer.className = "score-banner";
+      scoreContainer.innerHTML = `<span class="winners-loading">Loading score…</span>`;
+      wrapper.appendChild(scoreContainer);
+
+      fetchExactScore(matchConfig.footballDataMatchId).then((score) => {
+        if (score) {
+          scoreContainer.innerHTML = `
+            <span class="scoreline">${score.homeScore} <span class="dash">–</span> ${score.awayScore}</span>
+          `;
+        } else {
+          scoreContainer.innerHTML = "";
+        }
+      });
+    }
+
+    // --- Feature 2: prediction count, shown for every match regardless
+    // of resolution status or connection state (public information) ---
+    const countContainer = document.createElement("div");
+    countContainer.className = "prediction-count";
+    countContainer.textContent = "Loading predictions…";
+    wrapper.appendChild(countContainer);
+
+    fetchPredictionEvents(matchConfig.contractMatchId).then((events) => {
+      const count = events.length;
+      countContainer.innerHTML = count === 1
+        ? `<span class="count-num">1</span> prediction made`
+        : `<span class="count-num">${count}</span> predictions made`;
+
+      // --- Feature 3: winners list, only rendered for resolved matches
+      // and only visible once a UP is connected ---
+      if (resolved && userAddress) {
+        const winners = events.filter((e) => e.predictedResult === actualResult);
+        renderWinnersSection(wrapper, winners);
+      }
+    });
 
     // --- Prediction / result / claim section ---
     if (!userAddress) {
@@ -1004,6 +1225,62 @@
     }
 
     return wrapper;
+  }
+
+  // Renders the "who got it right" section: one row per winner, with
+  // UP name and avatar. Profiles are fetched in parallel and the list
+  // is filled in progressively as each one resolves.
+  function renderWinnersSection(matchCard, winners) {
+    const section = document.createElement("div");
+    section.className = "winners-section";
+
+    const label = document.createElement("div");
+    label.className = "winners-label";
+    label.textContent = "Who got it right";
+    section.appendChild(label);
+
+    const list = document.createElement("div");
+    list.className = "winners-list";
+    section.appendChild(list);
+
+    if (winners.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "winners-empty";
+      empty.textContent = "Nobody predicted this result.";
+      list.appendChild(empty);
+      matchCard.appendChild(section);
+      return;
+    }
+
+    const loading = document.createElement("div");
+    loading.className = "winners-loading";
+    loading.textContent = `Loading ${winners.length === 1 ? "winner" : "winners"}…`;
+    list.appendChild(loading);
+
+    Promise.all(
+      winners.map((w) => fetchProfileMetadata(w.predictor).then((profile) => ({ ...w, profile })))
+    ).then((resolvedWinners) => {
+      list.innerHTML = "";
+      resolvedWinners.forEach((w) => {
+        const row = document.createElement("div");
+        row.className = "winner-row";
+
+        const avatarHtml = w.profile.imageUrl
+          ? `<img class="winner-avatar" src="${w.profile.imageUrl}" alt="${w.profile.name}">`
+          : `<div class="winner-avatar"></div>`;
+
+        row.innerHTML = `
+          ${avatarHtml}
+          <div>
+            <div class="winner-name">${w.profile.name}</div>
+            <div class="winner-address">${shortAddr(w.predictor)}</div>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    });
+
+    matchCard.appendChild(section);
   }
 
   function formatKickoff(isoString) {

@@ -1,0 +1,14 @@
+{
+  "name": "matchpredictor-backend",
+  "version": "1.0.0",
+  "description": "Proxy verso football-data.org per MatchPredictor",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  }
+}

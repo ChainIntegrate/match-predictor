@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MatchPredictor — On-chain World Cup 2026 predictions</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
 <style>
   :root {
     --pitch-black: #0B1F17;
@@ -43,7 +46,7 @@
   }
 
   header {
-    padding: 48px 24px 32px;
+    padding: 48px 24px 28px;
     text-align: center;
     border-bottom: 1px solid var(--line);
     position: relative;
@@ -60,17 +63,30 @@
     background: var(--whistle);
   }
 
-  .eyebrow {
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 13px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--mint);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    padding: 5px 14px;
+    border: 1px solid var(--mint-dim);
+    border-radius: 999px;
+  }
+
+  .header-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--whistle);
   }
 
   h1 {
-    font-size: clamp(28px, 5vw, 48px);
-    margin: 0 0 8px;
+    font-size: clamp(30px, 5.5vw, 52px);
+    margin: 0 0 10px;
     letter-spacing: -0.01em;
     line-height: 1.05;
   }
@@ -81,6 +97,23 @@
     max-width: 480px;
     margin: 0 auto;
     line-height: 1.5;
+  }
+
+  .header-flags {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  .header-flags img {
+    width: 26px;
+    height: 19px;
+    border-radius: 3px;
+    object-fit: cover;
+    opacity: 0.85;
+    box-shadow: 0 0 0 1px rgba(127, 224, 181, 0.15);
   }
 
   main {
@@ -203,24 +236,39 @@
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    padding: 28px 20px;
+    padding: 24px 20px;
     gap: 12px;
   }
 
   .team {
-    text-align: center;
-    font-size: clamp(16px, 3.5vw, 20px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(15px, 3.2vw, 19px);
     font-weight: 700;
   }
 
-  .team.home { text-align: right; }
-  .team.away { text-align: left; }
+  .team.home { justify-content: flex-end; }
+  .team.away { justify-content: flex-start; }
+
+  .team-flag {
+    width: 30px;
+    height: 22px;
+    border-radius: 3px;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .team.home .team-flag { order: 2; }
 
   .vs-divider {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--chalk-dim);
     text-align: center;
-    padding: 0 8px;
+    padding: 0 6px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
   }
 
   .match-meta {
@@ -415,7 +463,8 @@
 
   @media (max-width: 480px) {
     .match-body { padding: 20px 12px; }
-    .team { font-size: 15px; }
+    .team { font-size: 14px; gap: 7px; }
+    .team-flag { width: 24px; height: 18px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -426,15 +475,13 @@
 <body>
 
 <header>
-  <div class="eyebrow">LUKSO · FIFA World Cup 2026</div>
+  <div class="header-badge"><span class="dot"></span>LUKSO · FIFA World Cup 2026</div>
   <h1>MatchPredictor</h1>
   <p class="subtitle">
-    Predict the outcome of the semi-finals and the final. On-chain, verifiable,
+    Predict the outcome of the group stage, semi-finals and final. On-chain, verifiable,
     no middleman. Winners get an NFT to keep.
   </p>
-  <p class="subtitle" style="margin-top: 12px; font-size: 13px;">
-    <a href="/index-it.html" style="color: var(--mint);">🇮🇹 Versione italiana</a>
-  </p>
+  <div class="header-flags" id="header-flags"></div>
 </header>
 
 <main>
@@ -513,18 +560,133 @@
     EXPLORER_BASE: "https://explorer.lukso.network/address/",
     IPFS_GATEWAY: "https://api.universalprofile.cloud/ipfs/",
 
-    // Launch matches — teams to update once known (TBD until quarter-finals end)
     MATCHES: [
-    {
-  contractMatchId: 1,
-  teamHome: "Switzerland",
-  teamAway: "Canada",
-  label: "Group B",
-  kickoff: "2026-06-24T19:00:00Z",
-  venue: "World Cup 2026"
-},
+      {
+        contractMatchId: 1,
+        teamHome: "Switzerland",
+        teamAway: "Canada",
+        label: "Group B",
+        kickoff: "2026-06-24T19:00:00Z",
+        venue: "World Cup 2026"
+      },
+      {
+        contractMatchId: 2,
+        teamHome: "Morocco",
+        teamAway: "Haiti",
+        label: "Group C",
+        kickoff: "2026-06-24T22:00:00Z",
+        venue: "World Cup 2026"
+      },
+      {
+        contractMatchId: 3,
+        teamHome: "Scotland",
+        teamAway: "Brazil",
+        label: "Group C",
+        kickoff: "2026-06-24T22:00:00Z",
+        venue: "World Cup 2026"
+      },
+      {
+        contractMatchId: 4,
+        teamHome: "Czechia",
+        teamAway: "Mexico",
+        label: "Group A",
+        kickoff: "2026-06-25T01:00:00Z",
+        venue: "World Cup 2026"
+      },
+      {
+        contractMatchId: 5,
+        teamHome: "South Africa",
+        teamAway: "South Korea",
+        label: "Group A",
+        kickoff: "2026-06-25T01:00:00Z",
+        venue: "World Cup 2026"
+      },
+      {
+        contractMatchId: 6,
+        teamHome: "Ecuador",
+        teamAway: "Germany",
+        label: "Group E",
+        kickoff: "2026-06-25T20:00:00Z",
+        venue: "World Cup 2026"
+      },
+      {
+        contractMatchId: 7,
+        teamHome: "Curaçao",
+        teamAway: "Ivory Coast",
+        label: "Group E",
+        kickoff: "2026-06-25T20:00:00Z",
+        venue: "World Cup 2026"
+      }
     ]
   };
+
+  // Team name -> ISO 3166-1 alpha-2 code, for flagcdn.com
+  const FLAG_CODES = {
+    "Switzerland": "ch",
+    "Canada": "ca",
+    "Morocco": "ma",
+    "Haiti": "ht",
+    "Scotland": "gb-sct",
+    "Brazil": "br",
+    "Czechia": "cz",
+    "Mexico": "mx",
+    "South Africa": "za",
+    "South Korea": "kr",
+    "Ecuador": "ec",
+    "Germany": "de",
+    "Curaçao": "cw",
+    "Ivory Coast": "ci",
+    "Italy": "it",
+    "Argentina": "ar",
+    "Spain": "es",
+    "France": "fr",
+    "England": "gb-eng",
+    "Portugal": "pt",
+    "Netherlands": "nl",
+    "Belgium": "be",
+    "Croatia": "hr",
+    "Uruguay": "uy",
+    "USA": "us",
+    "United States": "us",
+    "Japan": "jp",
+    "Senegal": "sn",
+    "Colombia": "co",
+    "Ghana": "gh",
+    "Tunisia": "tn",
+    "Sweden": "se",
+    "Australia": "au",
+    "Paraguay": "py",
+    "Türkiye": "tr",
+    "Poland": "pl",
+    "Denmark": "dk",
+    "Egypt": "eg",
+    "Iran": "ir",
+    "Qatar": "qa",
+    "Bosnia-Herzegovina": "ba",
+    "Norway": "no",
+    "Iraq": "iq",
+    "Algeria": "dz",
+    "Jordan": "jo",
+    "Uzbekistan": "uz",
+    "DR Congo": "cd",
+    "Congo DR": "cd",
+    "Cape Verde": "cv",
+    "Saudi Arabia": "sa",
+    "New Zealand": "nz",
+    "Panama": "pa",
+    "TBD": null
+  };
+
+  function flagUrl(teamName) {
+    const code = FLAG_CODES[teamName];
+    return code ? `https://flagcdn.com/48x36/${code}.png` : null;
+  }
+
+  function flagImgTag(teamName, extraStyle = "") {
+    const url = flagUrl(teamName);
+    if (!url) return "";
+    return `<img class="team-flag" src="${url}" alt="${teamName} flag" style="${extraStyle}">`;
+  }
 
   // Minimal ABI needed by the frontend
   const CONTRACT_ABI = [
@@ -561,6 +723,7 @@
     matchesContainer: document.getElementById("matches-container"),
     globalStatus: document.getElementById("global-status"),
     explorerLink: document.getElementById("explorer-link"),
+    headerFlags: document.getElementById("header-flags"),
     adminToggleWrapper: document.getElementById("admin-toggle-wrapper"),
     btnAdminToggle: document.getElementById("btn-admin-toggle"),
     adminPanel: document.getElementById("admin-panel"),
@@ -575,6 +738,24 @@
   };
 
   els.explorerLink.href = CONFIG.EXPLORER_BASE + CONFIG.CONTRACT_ADDRESS;
+
+  // Strip of flags in the header, one per team across all live matches
+  (function renderHeaderFlags() {
+    const seen = new Set();
+    CONFIG.MATCHES.forEach((m) => {
+      [m.teamHome, m.teamAway].forEach((team) => {
+        if (seen.has(team)) return;
+        seen.add(team);
+        const url = flagUrl(team);
+        if (url) {
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = team;
+          els.headerFlags.appendChild(img);
+        }
+      });
+    });
+  })();
 
   function shortAddr(addr) {
     return addr.slice(0, 6) + "…" + addr.slice(-4);
@@ -656,8 +837,6 @@
         .catch(() => ({ ERC725: null }));
 
       if (!ERC725) {
-        // Fallback: erc725.js not always available via public CDN —
-        // if loading fails, we stay with the shortened address.
         return;
       }
 
@@ -688,8 +867,6 @@
         els.upAvatar.classList.remove("placeholder");
       }
     } catch (err) {
-      // Profile without LSP3 metadata set, or IPFS network error:
-      // we stay with the shortened address, no experience blocking.
       console.warn("Could not load LSP3 profile:", err);
     }
   }
@@ -723,7 +900,6 @@
         ? await readContract.claimed(matchConfig.contractMatchId, userAddress)
         : false;
     } catch (err) {
-      // Match not yet created on-chain: we still show the informational card
       console.warn(`Match ${matchConfig.contractMatchId} not found on-chain`, err);
     }
 
@@ -749,9 +925,9 @@
         <span class="match-status ${statusClass}">${statusLabel}</span>
       </div>
       <div class="match-body">
-        <div class="team home">${teamHome}</div>
+        <div class="team home">${flagImgTag(teamHome)}<span>${teamHome}</span></div>
         <div class="vs-divider">vs</div>
-        <div class="team away">${teamAway}</div>
+        <div class="team away">${flagImgTag(teamAway)}<span>${teamAway}</span></div>
       </div>
       <div class="match-meta">
         ${matchConfig.venue} · ${formatKickoff(matchConfig.kickoff)}
@@ -964,8 +1140,6 @@
         }
       ];
 
-      // Fetch the already-pinned metadata JSON, to correctly compute
-      // the verification hash inside the encoded VerifiableURI
       const metadataResponse = await fetch(`${CONFIG.IPFS_GATEWAY}${METADATA_JSON_CID}`);
       const metadataJson = await metadataResponse.json();
 

@@ -635,6 +635,15 @@
       </button>
       <div class="admin-result" id="metadata-result"></div>
     </div>
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);">
+      <div class="admin-label">Import matches from football-data.org</div>
+      <button class="btn-admin-submit" id="btn-import-matches" style="background: var(--whistle);">
+        Import matches from football-data.org
+      </button>
+      <div class="admin-result" id="import-result"></div>
+    </div>
+
+
   </div>
 
   <div id="matches-container">
@@ -854,7 +863,9 @@
     btnAdminSubmit: document.getElementById("btn-admin-submit"),
     adminResult: document.getElementById("admin-result"),
     btnSetMetadata: document.getElementById("btn-set-metadata"),
-    metadataResult: document.getElementById("metadata-result")
+    metadataResult: document.getElementById("metadata-result"),
+    btnImportMatches: document.getElementById("btn-import-matches"),
+    importResult: document.getElementById("import-result")
   };
 
   els.explorerLink.href = CONFIG.EXPLORER_BASE + CONFIG.CONTRACT_ADDRESS;
@@ -1446,6 +1457,102 @@
       els.btnSetMetadata.disabled = false;
       els.btnSetMetadata.textContent = "Set metadata on IPFS";
     }
+  });
+
+  // ============================================================
+  // IMPORT PARTITE DA FOOTBALL-DATA.ORG (admin panel, owner only)
+  // ============================================================
+
+  // Lista statica recuperata da football-data.org il 26/06/2026.
+  // Copre le partite della fase a gironi ancora da giocare (25-28 giugno).
+  const UPCOMING_MATCHES_TO_IMPORT = [
+    { footballDataMatchId: 537361, teamHome: "Tunisia", teamAway: "Netherlands", kickoff: "2026-06-25T23:00:00Z", group: "GROUP_F" },
+    { footballDataMatchId: 537362, teamHome: "Japan", teamAway: "Sweden", kickoff: "2026-06-25T23:00:00Z", group: "GROUP_F" },
+    { footballDataMatchId: 537349, teamHome: "Turkey", teamAway: "United States", kickoff: "2026-06-26T02:00:00Z", group: "GROUP_D" },
+    { footballDataMatchId: 537350, teamHome: "Paraguay", teamAway: "Australia", kickoff: "2026-06-26T02:00:00Z", group: "GROUP_D" },
+    { footballDataMatchId: 537395, teamHome: "Norway", teamAway: "France", kickoff: "2026-06-26T19:00:00Z", group: "GROUP_I" },
+    { footballDataMatchId: 537396, teamHome: "Senegal", teamAway: "Iraq", kickoff: "2026-06-26T19:00:00Z", group: "GROUP_I" },
+    { footballDataMatchId: 537373, teamHome: "Uruguay", teamAway: "Spain", kickoff: "2026-06-27T00:00:00Z", group: "GROUP_H" },
+    { footballDataMatchId: 537374, teamHome: "Cape Verde Islands", teamAway: "Saudi Arabia", kickoff: "2026-06-27T00:00:00Z", group: "GROUP_H" },
+    { footballDataMatchId: 537367, teamHome: "New Zealand", teamAway: "Belgium", kickoff: "2026-06-27T03:00:00Z", group: "GROUP_G" },
+    { footballDataMatchId: 537368, teamHome: "Egypt", teamAway: "Iran", kickoff: "2026-06-27T03:00:00Z", group: "GROUP_G" },
+    { footballDataMatchId: 537413, teamHome: "Panama", teamAway: "England", kickoff: "2026-06-27T21:00:00Z", group: "GROUP_L" },
+    { footballDataMatchId: 537414, teamHome: "Croatia", teamAway: "Ghana", kickoff: "2026-06-27T21:00:00Z", group: "GROUP_L" },
+    { footballDataMatchId: 537407, teamHome: "Colombia", teamAway: "Portugal", kickoff: "2026-06-27T23:30:00Z", group: "GROUP_K" },
+    { footballDataMatchId: 537408, teamHome: "Congo DR", teamAway: "Uzbekistan", kickoff: "2026-06-27T23:30:00Z", group: "GROUP_K" },
+    { footballDataMatchId: 537401, teamHome: "Jordan", teamAway: "Argentina", kickoff: "2026-06-28T02:00:00Z", group: "GROUP_J" },
+    { footballDataMatchId: 537402, teamHome: "Algeria", teamAway: "Austria", kickoff: "2026-06-28T02:00:00Z", group: "GROUP_J" }
+  ];
+
+  els.btnImportMatches.addEventListener("click", async () => {
+    els.btnImportMatches.disabled = true;
+    els.importResult.innerHTML = "";
+
+    const importedMapping = [];
+
+    for (let i = 0; i < UPCOMING_MATCHES_TO_IMPORT.length; i++) {
+      const m = UPCOMING_MATCHES_TO_IMPORT[i];
+      const deadlineSeconds = Math.floor(new Date(m.kickoff).getTime() / 1000);
+
+      const lineEl = document.createElement("div");
+      lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — confirm in your UP extension…`;
+      els.importResult.appendChild(lineEl);
+
+      if (deadlineSeconds <= Math.floor(Date.now() / 1000)) {
+        lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — skipped (kickoff already passed)`;
+        continue;
+      }
+
+      try {
+        const tx = await contract.createMatch(m.teamHome, m.teamAway, deadlineSeconds);
+        lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — waiting for confirmation…`;
+        const receipt = await tx.wait();
+
+        const event = receipt.logs
+          .map((log) => {
+            try { return contract.interface.parseLog(log); } catch { return null; }
+          })
+          .find((parsed) => parsed?.name === "MatchCreated");
+
+        const contractMatchId = event ? event.args.matchId.toString() : "?";
+        lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — ✅ created with matchId ${contractMatchId}`;
+
+        importedMapping.push({ contractMatchId, footballDataMatchId: m.footballDataMatchId, ...m });
+      } catch (err) {
+        console.error(err);
+        lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — ❌ ${parseContractError(err)}`;
+      }
+    }
+
+    const summaryEl = document.createElement("div");
+    summaryEl.style.marginTop = "16px";
+    summaryEl.style.paddingTop = "16px";
+    summaryEl.style.borderTop = "1px solid var(--line)";
+    summaryEl.innerHTML = "<strong>Done. Open the browser console to copy the full mapping (Ctrl+Shift+J / Cmd+Option+J).</strong>";
+    els.importResult.appendChild(summaryEl);
+
+    console.log("=== MATCH_ID_MAPPING per oracle/reportResultBatch.js ===");
+    console.log("const MATCH_ID_MAPPING = {");
+    importedMapping.forEach((m) => {
+      console.log(`  ${m.contractMatchId}: ${m.footballDataMatchId}, // ${m.teamHome} vs ${m.teamAway}`);
+    });
+    console.log("};");
+
+    console.log("\n=== CONFIG.MATCHES per frontend/index.html ===");
+    importedMapping.forEach((m) => {
+      console.log(`  {
+    contractMatchId: ${m.contractMatchId},
+    teamHome: "${m.teamHome}",
+    teamAway: "${m.teamAway}",
+    label: "${m.group}",
+    kickoff: "${m.kickoff}",
+    venue: "World Cup 2026",
+    footballDataMatchId: ${m.footballDataMatchId}
+  },`);
+    });
+
+    els.btnImportMatches.disabled = false;
+    els.btnImportMatches.textContent = "Import matches from football-data.org";
   });
 
   // ============================================================

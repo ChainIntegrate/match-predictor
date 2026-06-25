@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MatchPredictor — On-chain World Cup 2026 predictions</title>
+<meta property="og:title" content="MatchPredictor — On-chain World Cup 2026 predictions">
+<meta property="og:description" content="Predict the outcome of the World Cup 2026. On-chain, verifiable, no middleman. Winners get an NFT to keep.">
+<meta property="og:url" content="https://matchpredictor.chainintegrate.it">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://matchpredictor.chainintegrate.it/favicon-180.png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MatchPredictor — On-chain World Cup 2026 predictions">
+<meta name="twitter:description" content="Predict the outcome of the World Cup 2026. On-chain, verifiable, no middleman. Winners get an NFT to keep.">
+<meta name="twitter:image" content="https://matchpredictor.chainintegrate.it/favicon-180.png">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
@@ -635,15 +645,14 @@
       </button>
       <div class="admin-result" id="metadata-result"></div>
     </div>
-      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);">
+
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);">
       <div class="admin-label">Import matches from football-data.org</div>
       <button class="btn-admin-submit" id="btn-import-matches" style="background: var(--whistle);">
         Import matches from football-data.org
       </button>
       <div class="admin-result" id="import-result"></div>
     </div>
-
-
   </div>
 
   <div id="matches-container">
@@ -674,127 +683,46 @@
     SCORE_API_BASE: "https://matchpredictor.chainintegrate.it/api/match-score/",
 
     MATCHES: [
-      {
-        contractMatchId: 1,
-        teamHome: "Switzerland",
-        teamAway: "Canada",
-        label: "Group B",
-        kickoff: "2026-06-24T19:00:00Z",
-        venue: "World Cup 2026",
-        footballDataMatchId: 537337
-      },
-      {
-        contractMatchId: 2,
-        teamHome: "Morocco",
-        teamAway: "Haiti",
-        label: "Group C",
-        kickoff: "2026-06-24T22:00:00Z",
-        venue: "World Cup 2026",
-        footballDataMatchId: 537344
-      },
-      {
-        contractMatchId: 3,
-        teamHome: "Scotland",
-        teamAway: "Brazil",
-        label: "Group C",
-        kickoff: "2026-06-24T22:00:00Z",
-        venue: "World Cup 2026",
-        footballDataMatchId: 537343
-      },
-      {
-        contractMatchId: 4,
-        teamHome: "Czechia",
-        teamAway: "Mexico",
-        label: "Group A",
-        kickoff: "2026-06-25T01:00:00Z",
-        venue: "World Cup 2026",
-        footballDataMatchId: 537331
-      },
-      {
-        contractMatchId: 5,
-        teamHome: "South Africa",
-        teamAway: "South Korea",
-        label: "Group A",
-        kickoff: "2026-06-25T01:00:00Z",
-        venue: "World Cup 2026",
-        footballDataMatchId: 537332
-      },
-      {
-        contractMatchId: 6,
-        teamHome: "Ecuador",
-        teamAway: "Germany",
-        label: "Group E",
-        kickoff: "2026-06-25T20:00:00Z",
-        venue: "World Cup 2026",
-        footballDataMatchId: 537355
-      },
-      {
-        contractMatchId: 7,
-        teamHome: "Curaçao",
-        teamAway: "Ivory Coast",
-        label: "Group E",
-        kickoff: "2026-06-25T20:00:00Z",
-        venue: "World Cup 2026",
-        footballDataMatchId: 537356
-      }
+      { contractMatchId: 1, teamHome: "Switzerland", teamAway: "Canada", label: "Group B", kickoff: "2026-06-24T19:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537337 },
+      { contractMatchId: 2, teamHome: "Morocco", teamAway: "Haiti", label: "Group C", kickoff: "2026-06-24T22:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537344 },
+      { contractMatchId: 3, teamHome: "Scotland", teamAway: "Brazil", label: "Group C", kickoff: "2026-06-24T22:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537343 },
+      { contractMatchId: 4, teamHome: "Czechia", teamAway: "Mexico", label: "Group A", kickoff: "2026-06-25T01:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537331 },
+      { contractMatchId: 5, teamHome: "South Africa", teamAway: "South Korea", label: "Group A", kickoff: "2026-06-25T01:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537332 },
+      { contractMatchId: 6, teamHome: "Ecuador", teamAway: "Germany", label: "Group E", kickoff: "2026-06-25T20:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537355 },
+      { contractMatchId: 7, teamHome: "Curaçao", teamAway: "Ivory Coast", label: "Group E", kickoff: "2026-06-25T20:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537356 },
+      { contractMatchId: 8, teamHome: "Tunisia", teamAway: "Netherlands", label: "GROUP_F", kickoff: "2026-06-25T23:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537361 },
+      { contractMatchId: 9, teamHome: "Japan", teamAway: "Sweden", label: "GROUP_F", kickoff: "2026-06-25T23:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537362 },
+      { contractMatchId: 10, teamHome: "Turkey", teamAway: "United States", label: "GROUP_D", kickoff: "2026-06-26T02:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537349 },
+      { contractMatchId: 11, teamHome: "Paraguay", teamAway: "Australia", label: "GROUP_D", kickoff: "2026-06-26T02:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537350 },
+      { contractMatchId: 12, teamHome: "Norway", teamAway: "France", label: "GROUP_I", kickoff: "2026-06-26T19:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537395 },
+      { contractMatchId: 13, teamHome: "Senegal", teamAway: "Iraq", label: "GROUP_I", kickoff: "2026-06-26T19:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537396 },
+      { contractMatchId: 14, teamHome: "Uruguay", teamAway: "Spain", label: "GROUP_H", kickoff: "2026-06-27T00:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537373 },
+      { contractMatchId: 15, teamHome: "Cape Verde Islands", teamAway: "Saudi Arabia", label: "GROUP_H", kickoff: "2026-06-27T00:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537374 },
+      { contractMatchId: 16, teamHome: "New Zealand", teamAway: "Belgium", label: "GROUP_G", kickoff: "2026-06-27T03:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537367 },
+      { contractMatchId: 17, teamHome: "Egypt", teamAway: "Iran", label: "GROUP_G", kickoff: "2026-06-27T03:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537368 },
+      { contractMatchId: 18, teamHome: "Panama", teamAway: "England", label: "GROUP_L", kickoff: "2026-06-27T21:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537413 },
+      { contractMatchId: 19, teamHome: "Croatia", teamAway: "Ghana", label: "GROUP_L", kickoff: "2026-06-27T21:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537414 },
+      { contractMatchId: 20, teamHome: "Colombia", teamAway: "Portugal", label: "GROUP_K", kickoff: "2026-06-27T23:30:00Z", venue: "World Cup 2026", footballDataMatchId: 537407 },
+      { contractMatchId: 21, teamHome: "Congo DR", teamAway: "Uzbekistan", label: "GROUP_K", kickoff: "2026-06-27T23:30:00Z", venue: "World Cup 2026", footballDataMatchId: 537408 },
+      { contractMatchId: 22, teamHome: "Jordan", teamAway: "Argentina", label: "GROUP_J", kickoff: "2026-06-28T02:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537401 },
+      { contractMatchId: 23, teamHome: "Algeria", teamAway: "Austria", label: "GROUP_J", kickoff: "2026-06-28T02:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537402 }
     ]
   };
 
   // Team name -> ISO 3166-1 alpha-2 code, for flagcdn.com
   const FLAG_CODES = {
-    "Switzerland": "ch",
-    "Canada": "ca",
-    "Morocco": "ma",
-    "Haiti": "ht",
-    "Scotland": "gb-sct",
-    "Brazil": "br",
-    "Czechia": "cz",
-    "Mexico": "mx",
-    "South Africa": "za",
-    "South Korea": "kr",
-    "Ecuador": "ec",
-    "Germany": "de",
-    "Curaçao": "cw",
-    "Ivory Coast": "ci",
-    "Italy": "it",
-    "Argentina": "ar",
-    "Spain": "es",
-    "France": "fr",
-    "England": "gb-eng",
-    "Portugal": "pt",
-    "Netherlands": "nl",
-    "Belgium": "be",
-    "Croatia": "hr",
-    "Uruguay": "uy",
-    "USA": "us",
-    "United States": "us",
-    "Japan": "jp",
-    "Senegal": "sn",
-    "Colombia": "co",
-    "Ghana": "gh",
-    "Tunisia": "tn",
-    "Sweden": "se",
-    "Australia": "au",
-    "Paraguay": "py",
-    "Türkiye": "tr",
-    "Poland": "pl",
-    "Denmark": "dk",
-    "Egypt": "eg",
-    "Iran": "ir",
-    "Qatar": "qa",
-    "Bosnia-Herzegovina": "ba",
-    "Norway": "no",
-    "Iraq": "iq",
-    "Algeria": "dz",
-    "Jordan": "jo",
-    "Uzbekistan": "uz",
-    "DR Congo": "cd",
-    "Congo DR": "cd",
-    "Cape Verde": "cv",
-    "Saudi Arabia": "sa",
-    "New Zealand": "nz",
-    "Panama": "pa",
-    "TBD": null
+    "Switzerland": "ch", "Canada": "ca", "Morocco": "ma", "Haiti": "ht", "Scotland": "gb-sct",
+    "Brazil": "br", "Czechia": "cz", "Mexico": "mx", "South Africa": "za", "South Korea": "kr",
+    "Ecuador": "ec", "Germany": "de", "Curaçao": "cw", "Ivory Coast": "ci", "Italy": "it",
+    "Argentina": "ar", "Spain": "es", "France": "fr", "England": "gb-eng", "Portugal": "pt",
+    "Netherlands": "nl", "Belgium": "be", "Croatia": "hr", "Uruguay": "uy", "USA": "us",
+    "United States": "us", "Japan": "jp", "Senegal": "sn", "Colombia": "co", "Ghana": "gh",
+    "Tunisia": "tn", "Sweden": "se", "Australia": "au", "Paraguay": "py", "Türkiye": "tr",
+    "Turkey": "tr", "Poland": "pl", "Denmark": "dk", "Egypt": "eg", "Iran": "ir", "Qatar": "qa",
+    "Bosnia-Herzegovina": "ba", "Norway": "no", "Iraq": "iq", "Algeria": "dz", "Jordan": "jo",
+    "Uzbekistan": "uz", "DR Congo": "cd", "Congo DR": "cd", "Cape Verde": "cv",
+    "Cape Verde Islands": "cv", "Saudi Arabia": "sa", "New Zealand": "nz", "Panama": "pa",
+    "Austria": "at", "TBD": null
   };
 
   function flagUrl(teamName) {
@@ -834,12 +762,7 @@
   let contract = null;
   let readContract = null;
 
-  // Cache for exact scores fetched from our backend proxy (avoids
-  // re-fetching the same finished match score on every re-render)
   const scoreCache = new Map();
-
-  // Cache for LSP3 profile lookups (name + avatar), keyed by address,
-  // shared across all winner lists so the same UP isn't fetched twice
   const profileCache = new Map();
 
   const els = {
@@ -870,7 +793,6 @@
 
   els.explorerLink.href = CONFIG.EXPLORER_BASE + CONFIG.CONTRACT_ADDRESS;
 
-  // Strip of flags in the header, one per team across all live matches
   (function renderHeaderFlags() {
     const seen = new Set();
     CONFIG.MATCHES.forEach((m) => {
@@ -897,9 +819,6 @@
     els.globalStatus.className = "status-msg" + (isError ? " error" : "");
   }
 
-  // ============================================================
-  // UNIVERSAL PROFILE CONNECTION
-  // ============================================================
   async function connectUP() {
     if (!window.lukso) {
       setStatus(
@@ -934,6 +853,7 @@
       await loadProfileMetadata(userAddress);
       await checkIfOwner();
       await renderMatches();
+      renderLeaderboardSection();
 
       setStatus("");
     } catch (err) {
@@ -942,9 +862,6 @@
     }
   }
 
-  // ============================================================
-  // OWNER CHECK (show admin panel only if connected address is owner)
-  // ============================================================
   async function checkIfOwner() {
     try {
       const ownerAddress = await readContract.owner();
@@ -956,10 +873,6 @@
     }
   }
 
-  // ============================================================
-  // LSP3 PROFILE READ (name + image) — used both for the connected
-  // user's own bar and for each winner shown in a resolved match.
-  // ============================================================
   async function fetchProfileMetadata(address) {
     if (profileCache.has(address)) {
       return profileCache.get(address);
@@ -1021,9 +934,6 @@
     }
   }
 
-  // ============================================================
-  // EXACT SCORE (via our backend proxy to football-data.org)
-  // ============================================================
   async function fetchExactScore(footballDataMatchId) {
     if (!footballDataMatchId) return null;
 
@@ -1046,9 +956,6 @@
     }
   }
 
-  // ============================================================
-  // PREDICTIONS COUNT + WINNERS LIST (via on-chain events)
-  // ============================================================
   async function fetchPredictionEvents(contractMatchId) {
     try {
       const filter = readContract.filters.PredictionMade(contractMatchId);
@@ -1063,9 +970,6 @@
     }
   }
 
-  // ============================================================
-  // RENDER MATCHES
-  // ============================================================
   async function renderMatches() {
     els.matchesContainer.innerHTML = "";
 
@@ -1126,8 +1030,6 @@
       </div>
     `;
 
-    // --- Feature 1: exact score, shown for any resolved match, even
-    // before connecting a wallet (it's public information) ---
     if (resolved && matchConfig.footballDataMatchId) {
       const scoreContainer = document.createElement("div");
       scoreContainer.className = "score-banner";
@@ -1145,8 +1047,6 @@
       });
     }
 
-    // --- Feature 2: prediction count, shown for every match regardless
-    // of resolution status or connection state (public information) ---
     const countContainer = document.createElement("div");
     countContainer.className = "prediction-count";
     countContainer.textContent = "Loading predictions…";
@@ -1158,15 +1058,12 @@
         ? `<span class="count-num">1</span> prediction made`
         : `<span class="count-num">${count}</span> predictions made`;
 
-      // --- Feature 3: winners list, only rendered for resolved matches
-      // and only visible once a UP is connected ---
       if (resolved && userAddress) {
         const winners = events.filter((e) => e.predictedResult === actualResult);
         renderWinnersSection(wrapper, winners);
       }
     });
 
-    // --- Prediction / result / claim section ---
     if (!userAddress) {
       const hint = document.createElement("div");
       hint.className = "match-meta";
@@ -1205,7 +1102,6 @@
       return wrapper;
     }
 
-    // Match not resolved: show the three prediction buttons
     const predictRow = document.createElement("div");
     predictRow.className = "predict-row";
 
@@ -1238,9 +1134,6 @@
     return wrapper;
   }
 
-  // Renders the "who got it right" section: one row per winner, with
-  // UP name and avatar. Profiles are fetched in parallel and the list
-  // is filled in progressively as each one resolves.
   function renderWinnersSection(matchCard, winners) {
     const section = document.createElement("div");
     section.className = "winners-section";
@@ -1294,6 +1187,99 @@
     matchCard.appendChild(section);
   }
 
+  async function buildGlobalLeaderboard() {
+    const wins = new Map();
+
+    for (const matchConfig of CONFIG.MATCHES) {
+      let onChainMatch;
+      try {
+        onChainMatch = await readContract.getMatch(matchConfig.contractMatchId);
+      } catch {
+        continue;
+      }
+
+      if (!onChainMatch.resolved) continue;
+
+      const actualResult = Number(onChainMatch.actualResult);
+      const events = await fetchPredictionEvents(matchConfig.contractMatchId);
+
+      events.forEach((e) => {
+        if (e.predictedResult === actualResult) {
+          const addr = e.predictor.toLowerCase();
+          wins.set(addr, (wins.get(addr) || 0) + 1);
+        }
+      });
+    }
+
+    const ranked = Array.from(wins.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+
+    return ranked;
+  }
+
+  function renderLeaderboardSection() {
+    if (!userAddress) return;
+
+    const existing = document.getElementById("leaderboard-section");
+    if (existing) existing.remove();
+
+    const section = document.createElement("div");
+    section.className = "match";
+    section.id = "leaderboard-section";
+
+    section.innerHTML = `
+      <div class="match-label">
+        <span>🏆 Leaderboard</span>
+      </div>
+      <div class="winners-section" style="border-top: none; margin-top: 0;">
+        <div class="winners-label">Top predictors across all matches</div>
+        <div class="winners-list" id="leaderboard-list">
+          <div class="winners-loading">Loading leaderboard…</div>
+        </div>
+      </div>
+    `;
+
+    els.matchesContainer.insertAdjacentElement("beforebegin", section);
+
+    const listEl = section.querySelector("#leaderboard-list");
+
+    buildGlobalLeaderboard().then(async (ranked) => {
+      if (ranked.length === 0) {
+        listEl.innerHTML = `<div class="winners-empty">No resolved matches yet.</div>`;
+        return;
+      }
+
+      const withProfiles = await Promise.all(
+        ranked.map(async ([address, count]) => {
+          const profile = await fetchProfileMetadata(address);
+          return { address, count, profile };
+        })
+      );
+
+      listEl.innerHTML = "";
+      withProfiles.forEach(({ address, count, profile }, index) => {
+        const row = document.createElement("div");
+        row.className = "winner-row";
+
+        const avatarHtml = profile.imageUrl
+          ? `<img class="winner-avatar" src="${profile.imageUrl}" alt="${profile.name}">`
+          : `<div class="winner-avatar"></div>`;
+
+        row.innerHTML = `
+          <span style="font-weight: 700; color: var(--mint); width: 20px; flex-shrink: 0;">${index + 1}</span>
+          ${avatarHtml}
+          <div style="flex: 1;">
+            <div class="winner-name">${profile.name}</div>
+            <div class="winner-address">${shortAddr(address)}</div>
+          </div>
+          <div style="font-weight: 700; color: var(--mint);">${count} ${count === 1 ? "win" : "wins"}</div>
+        `;
+        listEl.appendChild(row);
+      });
+    });
+  }
+
   function formatKickoff(isoString) {
     const date = new Date(isoString);
     return date.toLocaleString("en-GB", {
@@ -1301,9 +1287,6 @@
     });
   }
 
-  // ============================================================
-  // ACTIONS: PREDICT & CLAIM
-  // ============================================================
   async function handlePredict(matchId, resultCode, btn, row) {
     row.querySelectorAll("button").forEach((b) => (b.disabled = true));
     setStatus("Sending prediction, confirm in your UP extension…");
@@ -1353,9 +1336,6 @@
     return "An error occurred: " + raw;
   }
 
-  // ============================================================
-  // ADMIN PANEL: toggle + match creation
-  // ============================================================
   els.btnAdminToggle.addEventListener("click", () => {
     els.adminPanel.classList.toggle("visible");
   });
@@ -1459,32 +1439,16 @@
     }
   });
 
-  // ============================================================
-  // IMPORT PARTITE DA FOOTBALL-DATA.ORG (admin panel, owner only)
-  // ============================================================
-
-  // Lista statica recuperata da football-data.org il 26/06/2026.
-  // Copre le partite della fase a gironi ancora da giocare (25-28 giugno).
-  const UPCOMING_MATCHES_TO_IMPORT = [
-    { footballDataMatchId: 537361, teamHome: "Tunisia", teamAway: "Netherlands", kickoff: "2026-06-25T23:00:00Z", group: "GROUP_F" },
-    { footballDataMatchId: 537362, teamHome: "Japan", teamAway: "Sweden", kickoff: "2026-06-25T23:00:00Z", group: "GROUP_F" },
-    { footballDataMatchId: 537349, teamHome: "Turkey", teamAway: "United States", kickoff: "2026-06-26T02:00:00Z", group: "GROUP_D" },
-    { footballDataMatchId: 537350, teamHome: "Paraguay", teamAway: "Australia", kickoff: "2026-06-26T02:00:00Z", group: "GROUP_D" },
-    { footballDataMatchId: 537395, teamHome: "Norway", teamAway: "France", kickoff: "2026-06-26T19:00:00Z", group: "GROUP_I" },
-    { footballDataMatchId: 537396, teamHome: "Senegal", teamAway: "Iraq", kickoff: "2026-06-26T19:00:00Z", group: "GROUP_I" },
-    { footballDataMatchId: 537373, teamHome: "Uruguay", teamAway: "Spain", kickoff: "2026-06-27T00:00:00Z", group: "GROUP_H" },
-    { footballDataMatchId: 537374, teamHome: "Cape Verde Islands", teamAway: "Saudi Arabia", kickoff: "2026-06-27T00:00:00Z", group: "GROUP_H" },
-    { footballDataMatchId: 537367, teamHome: "New Zealand", teamAway: "Belgium", kickoff: "2026-06-27T03:00:00Z", group: "GROUP_G" },
-    { footballDataMatchId: 537368, teamHome: "Egypt", teamAway: "Iran", kickoff: "2026-06-27T03:00:00Z", group: "GROUP_G" },
-    { footballDataMatchId: 537413, teamHome: "Panama", teamAway: "England", kickoff: "2026-06-27T21:00:00Z", group: "GROUP_L" },
-    { footballDataMatchId: 537414, teamHome: "Croatia", teamAway: "Ghana", kickoff: "2026-06-27T21:00:00Z", group: "GROUP_L" },
-    { footballDataMatchId: 537407, teamHome: "Colombia", teamAway: "Portugal", kickoff: "2026-06-27T23:30:00Z", group: "GROUP_K" },
-    { footballDataMatchId: 537408, teamHome: "Congo DR", teamAway: "Uzbekistan", kickoff: "2026-06-27T23:30:00Z", group: "GROUP_K" },
-    { footballDataMatchId: 537401, teamHome: "Jordan", teamAway: "Argentina", kickoff: "2026-06-28T02:00:00Z", group: "GROUP_J" },
-    { footballDataMatchId: 537402, teamHome: "Algeria", teamAway: "Austria", kickoff: "2026-06-28T02:00:00Z", group: "GROUP_J" }
-  ];
+  // Lista statica recuperata da football-data.org. Aggiorna questo
+  // array (e ricarica la pagina) prima di ogni nuovo import batch.
+  const UPCOMING_MATCHES_TO_IMPORT = [];
 
   els.btnImportMatches.addEventListener("click", async () => {
+    if (UPCOMING_MATCHES_TO_IMPORT.length === 0) {
+      els.importResult.innerHTML = `<div class="winners-empty">No matches configured to import. Update UPCOMING_MATCHES_TO_IMPORT in the code first.</div>`;
+      return;
+    }
+
     els.btnImportMatches.disabled = true;
     els.importResult.innerHTML = "";
 
@@ -1555,12 +1519,8 @@
     els.btnImportMatches.textContent = "Import matches from football-data.org";
   });
 
-  // ============================================================
-  // INIT
-  // ============================================================
   els.btnConnect.addEventListener("click", connectUP);
 
-  // Show matches even before connecting (public read, no signer)
   (async () => {
     try {
       const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.13.4/+esm");

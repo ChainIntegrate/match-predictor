@@ -1392,7 +1392,7 @@
   });
 
   els.btnSetMetadata.addEventListener("click", async () => {
-    const METADATA_JSON_CID = "bafkreihuvhznkea7wj3nwmgyxjoot3cw6i4phlxhrcta6kutjqzbuh6owu";
+    const METADATA_JSON_CID = "bafkreieufsfxqw7borddwuumd5verxfzwyqdst6dm7xh72urebqkrluh7i";
 
     els.btnSetMetadata.disabled = true;
     els.btnSetMetadata.textContent = "Preparing data…";
@@ -1447,7 +1447,7 @@
   // statico da aggiornare a mano. La finestra di date qui sotto va
   // aggiornata quando si vuole importare un nuovo turno (es. round of 32).
   const IMPORT_DATE_FROM = "2026-06-25";
-  const IMPORT_DATE_TO = "2026-07-04";
+  const IMPORT_DATE_TO = "2026-07-20";
 
   async function fetchUpcomingMatchesToImport() {
     const url = `https://matchpredictor.chainintegrate.it/api/upcoming-matches?dateFrom=${IMPORT_DATE_FROM}&dateTo=${IMPORT_DATE_TO}`;

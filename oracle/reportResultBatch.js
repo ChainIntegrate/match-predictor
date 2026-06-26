@@ -4,58 +4,37 @@
  * Script che fa da ponte tra il mondo reale (risultati calcio via football-data.org)
  * e il contratto MatchPredictor su LUKSO.
  *
- * Flusso:
- *   1. Interroga football-data.org per lo stato di una partita specifica
- *   2. Se la partita è conclusa (status FINISHED), traduce il risultato nell'enum del contratto
- *   3. Firma e invia la transazione reportResult() con la EOA oracolo
+ * A differenza della versione precedente, il mapping matchId -> footballDataMatchId
+ * NON è più hardcoded in questo file: viene letto dinamicamente da matches-data.json
+ * (lo stesso file che il pannello admin aggiorna tramite firma owner, senza accesso VPS).
+ * Questo significa che ogni volta che l'owner importa/salva nuove partite dal sito,
+ * questo script le conosce automaticamente al prossimo lancio, senza modifiche manuali.
+ *
+ * Pensato per essere lanciato periodicamente da un cron job (vedi README/crontab),
+ * così i risultati appaiono sul sito senza bisogno di accesso VPS per eseguirlo.
  *
  * Uso:
- *   node oracle/reportResult.js <matchId_contratto> <matchId_footballdata>
- *
- * Esempio:
- *   node oracle/reportResult.js 0 436125
- *   (0 = matchId nel TUO contratto, 436125 = id della partita su football-data.org)
+ *   node oracle/reportResultBatch.js
  */
 
 require("dotenv").config();
 const { ethers } = require("ethers");
-const fetch = require("node-fetch");
+const fs = require("fs");
+const path = require("path");
 
 const RPC_URL = process.env.LUKSO_RPC_URL || "https://rpc.testnet.lukso.network";
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
 const ORACLE_PRIVATE_KEY = process.env.ORACLE_PRIVATE_KEY;
 const FOOTBALL_DATA_API_KEY = process.env.FOOTBALL_DATA_API_KEY;
 
+// Path del file dati condiviso, scritto dal backend (server.js) quando
+// l'owner clicca "Save matches data to server" nel pannello admin.
+const MATCHES_DATA_PATH = path.join(__dirname, "..", "backend", "matches-data.json");
+
 if (!CONTRACT_ADDRESS || !ORACLE_PRIVATE_KEY || !FOOTBALL_DATA_API_KEY) {
   console.error("Errore: imposta CONTRACT_ADDRESS, ORACLE_PRIVATE_KEY e FOOTBALL_DATA_API_KEY nel file .env");
   process.exit(1);
 }
-
-const MATCH_ID_MAPPING = {
-  1: 537337,
-  2: 537344,
-  3: 537343,
-  4: 537331,
-  5: 537332,
-  6: 537355,
-  7: 537356,
-  8: 537361,
-  9: 537362,
-  10: 537349,
-  11: 537350,
-  12: 537395,
-  13: 537396,
-  14: 537373,
-  15: 537374,
-  16: 537367,
-  17: 537368,
-  18: 537413,
-  19: 537414,
-  20: 537407,
-  21: 537408,
-  22: 537401,
-  23: 537402
-};
 
 const CONTRACT_ABI = [
   "function nextMatchId() external view returns (uint256)",
@@ -64,6 +43,26 @@ const CONTRACT_ABI = [
 ];
 
 const ResultEnum = { NONE: 0, HOME_WIN: 1, DRAW: 2, AWAY_WIN: 3 };
+
+// Tier gratuito football-data.org: max 10 richieste/minuto.
+// Una pausa di 7s tra le chiamate tiene il ritmo a ~8.5/minuto,
+// con margine di sicurezza anche se il cron job si sovrappone
+// a un'esecuzione precedente ancora in corso.
+const DELAY_BETWEEN_CALLS_MS = 7000;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function loadMatchIdMapping() {
+  if (!fs.existsSync(MATCHES_DATA_PATH)) {
+    console.error(`Errore: ${MATCHES_DATA_PATH} non trovato. Salva almeno una volta i dati dal pannello admin.`);
+    process.exit(1);
+  }
+  const raw = fs.readFileSync(MATCHES_DATA_PATH, "utf8");
+  const data = JSON.parse(raw);
+  return data.matchIdMapping || {};
+}
 
 async function fetchMatchResult(footballDataMatchId) {
   const url = `https://api.football-data.org/v4/matches/${footballDataMatchId}`;
@@ -98,12 +97,17 @@ async function fetchMatchResult(footballDataMatchId) {
 }
 
 async function main() {
+  const matchIdMapping = loadMatchIdMapping();
+  console.log(`Mapping caricato da matches-data.json: ${Object.keys(matchIdMapping).length} partite conosciute.`);
+
   const provider = new ethers.JsonRpcProvider(RPC_URL);
   const oracleWallet = new ethers.Wallet(ORACLE_PRIVATE_KEY, provider);
   const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, oracleWallet);
 
   const nextMatchId = await contract.nextMatchId();
   console.log(`Totale match sul contratto: ${nextMatchId} (id 0 a ${Number(nextMatchId) - 1})`);
+
+  let isFirstCall = true;
 
   for (let matchId = 0; matchId < Number(nextMatchId); matchId++) {
     const onChainMatch = await contract.matches(matchId);
@@ -117,11 +121,16 @@ async function main() {
       continue;
     }
 
-    const footballDataId = MATCH_ID_MAPPING[matchId];
+    const footballDataId = matchIdMapping[String(matchId)];
     if (!footballDataId) {
       console.log(`Match #${matchId} (${onChainMatch.teamHome} vs ${onChainMatch.teamAway}): nessun mapping football-data.org configurato, salto.`);
       continue;
     }
+
+    if (!isFirstCall) {
+      await sleep(DELAY_BETWEEN_CALLS_MS);
+    }
+    isFirstCall = false;
 
     console.log(`Match #${matchId} (${onChainMatch.teamHome} vs ${onChainMatch.teamAway}): controllo football-data.org #${footballDataId}...`);
 

@@ -4,16 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MatchPredictor — On-chain World Cup 2026 predictions</title>
-<meta property="og:title" content="MatchPredictor — On-chain World Cup 2026 predictions">
-<meta property="og:description" content="Predict the outcome of the World Cup 2026. On-chain, verifiable, no middleman. Winners get an NFT to keep.">
-<meta property="og:url" content="https://matchpredictor.chainintegrate.it">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://matchpredictor.chainintegrate.it/favicon-180.png">
-
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MatchPredictor — On-chain World Cup 2026 predictions">
-<meta name="twitter:description" content="Predict the outcome of the World Cup 2026. On-chain, verifiable, no middleman. Winners get an NFT to keep.">
-<meta name="twitter:image" content="https://matchpredictor.chainintegrate.it/favicon-180.png">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
@@ -653,6 +643,14 @@
       </button>
       <div class="admin-result" id="import-result"></div>
     </div>
+
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);">
+      <div class="admin-label">Save matches list to server (sign, no gas)</div>
+      <button class="btn-admin-submit" id="btn-save-matches-data" style="background: var(--mint-dim);">
+        Save matches data to server
+      </button>
+      <div class="admin-result" id="save-matches-result"></div>
+    </div>
   </div>
 
   <div id="matches-container">
@@ -682,31 +680,13 @@
     // Backend proxy for football-data.org (keeps the API key off the client)
     SCORE_API_BASE: "https://matchpredictor.chainintegrate.it/api/match-score/",
 
-    MATCHES: [
-      { contractMatchId: 1, teamHome: "Switzerland", teamAway: "Canada", label: "Group B", kickoff: "2026-06-24T19:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537337 },
-      { contractMatchId: 2, teamHome: "Morocco", teamAway: "Haiti", label: "Group C", kickoff: "2026-06-24T22:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537344 },
-      { contractMatchId: 3, teamHome: "Scotland", teamAway: "Brazil", label: "Group C", kickoff: "2026-06-24T22:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537343 },
-      { contractMatchId: 4, teamHome: "Czechia", teamAway: "Mexico", label: "Group A", kickoff: "2026-06-25T01:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537331 },
-      { contractMatchId: 5, teamHome: "South Africa", teamAway: "South Korea", label: "Group A", kickoff: "2026-06-25T01:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537332 },
-      { contractMatchId: 6, teamHome: "Ecuador", teamAway: "Germany", label: "Group E", kickoff: "2026-06-25T20:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537355 },
-      { contractMatchId: 7, teamHome: "Curaçao", teamAway: "Ivory Coast", label: "Group E", kickoff: "2026-06-25T20:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537356 },
-      { contractMatchId: 8, teamHome: "Tunisia", teamAway: "Netherlands", label: "GROUP_F", kickoff: "2026-06-25T23:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537361 },
-      { contractMatchId: 9, teamHome: "Japan", teamAway: "Sweden", label: "GROUP_F", kickoff: "2026-06-25T23:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537362 },
-      { contractMatchId: 10, teamHome: "Turkey", teamAway: "United States", label: "GROUP_D", kickoff: "2026-06-26T02:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537349 },
-      { contractMatchId: 11, teamHome: "Paraguay", teamAway: "Australia", label: "GROUP_D", kickoff: "2026-06-26T02:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537350 },
-      { contractMatchId: 12, teamHome: "Norway", teamAway: "France", label: "GROUP_I", kickoff: "2026-06-26T19:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537395 },
-      { contractMatchId: 13, teamHome: "Senegal", teamAway: "Iraq", label: "GROUP_I", kickoff: "2026-06-26T19:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537396 },
-      { contractMatchId: 14, teamHome: "Uruguay", teamAway: "Spain", label: "GROUP_H", kickoff: "2026-06-27T00:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537373 },
-      { contractMatchId: 15, teamHome: "Cape Verde Islands", teamAway: "Saudi Arabia", label: "GROUP_H", kickoff: "2026-06-27T00:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537374 },
-      { contractMatchId: 16, teamHome: "New Zealand", teamAway: "Belgium", label: "GROUP_G", kickoff: "2026-06-27T03:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537367 },
-      { contractMatchId: 17, teamHome: "Egypt", teamAway: "Iran", label: "GROUP_G", kickoff: "2026-06-27T03:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537368 },
-      { contractMatchId: 18, teamHome: "Panama", teamAway: "England", label: "GROUP_L", kickoff: "2026-06-27T21:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537413 },
-      { contractMatchId: 19, teamHome: "Croatia", teamAway: "Ghana", label: "GROUP_L", kickoff: "2026-06-27T21:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537414 },
-      { contractMatchId: 20, teamHome: "Colombia", teamAway: "Portugal", label: "GROUP_K", kickoff: "2026-06-27T23:30:00Z", venue: "World Cup 2026", footballDataMatchId: 537407 },
-      { contractMatchId: 21, teamHome: "Congo DR", teamAway: "Uzbekistan", label: "GROUP_K", kickoff: "2026-06-27T23:30:00Z", venue: "World Cup 2026", footballDataMatchId: 537408 },
-      { contractMatchId: 22, teamHome: "Jordan", teamAway: "Argentina", label: "GROUP_J", kickoff: "2026-06-28T02:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537401 },
-      { contractMatchId: 23, teamHome: "Algeria", teamAway: "Austria", label: "GROUP_J", kickoff: "2026-06-28T02:00:00Z", venue: "World Cup 2026", footballDataMatchId: 537402 }
-    ]
+    // Shared matches storage: loaded dynamically at startup from the backend,
+    // and updated by the admin panel (owner signs a message, no gas needed).
+    // This replaces the old hardcoded array so new matches appear for every
+    // visitor immediately after the owner imports/saves them, with no manual
+    // file editing or VPS access required.
+    MATCHES_DATA_API: "https://matchpredictor.chainintegrate.it/api/matches-data",
+    MATCHES: []
   };
 
   // Team name -> ISO 3166-1 alpha-2 code, for flagcdn.com
@@ -788,12 +768,15 @@
     btnSetMetadata: document.getElementById("btn-set-metadata"),
     metadataResult: document.getElementById("metadata-result"),
     btnImportMatches: document.getElementById("btn-import-matches"),
-    importResult: document.getElementById("import-result")
+    importResult: document.getElementById("import-result"),
+    btnSaveMatchesData: document.getElementById("btn-save-matches-data"),
+    saveMatchesResult: document.getElementById("save-matches-result")
   };
 
   els.explorerLink.href = CONFIG.EXPLORER_BASE + CONFIG.CONTRACT_ADDRESS;
 
-  (function renderHeaderFlags() {
+  function renderHeaderFlags() {
+    els.headerFlags.innerHTML = "";
     const seen = new Set();
     CONFIG.MATCHES.forEach((m) => {
       [m.teamHome, m.teamAway].forEach((team) => {
@@ -808,7 +791,25 @@
         }
       });
     });
-  })();
+  }
+
+  // Carica la lista partite condivisa dal backend, scrivendo in
+  // CONFIG.MATCHES / CONFIG.MATCH_ID_MAPPING. Chiamata all'avvio e
+  // ogni volta che si vuole essere sicuri di avere i dati più freschi
+  // (es. dopo la connessione UP, nel caso un altro dispositivo abbia
+  // aggiornato le partite nel frattempo).
+  async function loadMatchesData() {
+    try {
+      const response = await fetch(CONFIG.MATCHES_DATA_API);
+      const payload = await response.json();
+      if (payload.success && Array.isArray(payload.data?.matches)) {
+        CONFIG.MATCHES = payload.data.matches;
+        CONFIG.MATCH_ID_MAPPING = payload.data.matchIdMapping || {};
+      }
+    } catch (err) {
+      console.error("Could not load matches data from backend:", err);
+    }
+  }
 
   function shortAddr(addr) {
     return addr.slice(0, 6) + "…" + addr.slice(-4);
@@ -852,6 +853,8 @@
 
       await loadProfileMetadata(userAddress);
       await checkIfOwner();
+      await loadMatchesData();
+      renderHeaderFlags();
       await renderMatches();
       renderLeaderboardSection();
 
@@ -1439,37 +1442,63 @@
     }
   });
 
-  // Lista statica recuperata da football-data.org. Aggiorna questo
-  // array (e ricarica la pagina) prima di ogni nuovo import batch.
-  const UPCOMING_MATCHES_TO_IMPORT = [];
+  // Le partite da importare vengono recuperate dinamicamente dal backend
+  // (che a sua volta interroga football-data.org), invece di un array
+  // statico da aggiornare a mano. La finestra di date qui sotto va
+  // aggiornata quando si vuole importare un nuovo turno (es. round of 32).
+  const IMPORT_DATE_FROM = "2026-06-25";
+  const IMPORT_DATE_TO = "2026-07-04";
+
+  async function fetchUpcomingMatchesToImport() {
+    const url = `https://matchpredictor.chainintegrate.it/api/upcoming-matches?dateFrom=${IMPORT_DATE_FROM}&dateTo=${IMPORT_DATE_TO}`;
+    const response = await fetch(url);
+    const payload = await response.json();
+    if (!payload.success) throw new Error(payload.error || "Failed to fetch upcoming matches");
+
+    // Scarta le partite già presenti in CONFIG.MATCHES (stesso footballDataMatchId)
+    const existingIds = new Set(CONFIG.MATCHES.map((m) => m.footballDataMatchId));
+    return (payload.data || []).filter((m) => !existingIds.has(m.footballDataMatchId));
+  }
 
   els.btnImportMatches.addEventListener("click", async () => {
-    if (UPCOMING_MATCHES_TO_IMPORT.length === 0) {
-      els.importResult.innerHTML = `<div class="winners-empty">No matches configured to import. Update UPCOMING_MATCHES_TO_IMPORT in the code first.</div>`;
-      return;
-    }
-
     els.btnImportMatches.disabled = true;
     els.importResult.innerHTML = "";
 
+    let upcomingMatches;
+    try {
+      els.importResult.innerHTML = `<div class="winners-loading">Fetching upcoming matches from football-data.org…</div>`;
+      upcomingMatches = await fetchUpcomingMatchesToImport();
+    } catch (err) {
+      els.importResult.innerHTML = `<div class="winners-empty">Could not fetch upcoming matches: ${err.message}</div>`;
+      els.btnImportMatches.disabled = false;
+      return;
+    }
+
+    if (upcomingMatches.length === 0) {
+      els.importResult.innerHTML = `<div class="winners-empty">No new matches found to import in this date range.</div>`;
+      els.btnImportMatches.disabled = false;
+      return;
+    }
+
+    els.importResult.innerHTML = "";
     const importedMapping = [];
 
-    for (let i = 0; i < UPCOMING_MATCHES_TO_IMPORT.length; i++) {
-      const m = UPCOMING_MATCHES_TO_IMPORT[i];
+    for (let i = 0; i < upcomingMatches.length; i++) {
+      const m = upcomingMatches[i];
       const deadlineSeconds = Math.floor(new Date(m.kickoff).getTime() / 1000);
 
       const lineEl = document.createElement("div");
-      lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — confirm in your UP extension…`;
+      lineEl.textContent = `[${i + 1}/${upcomingMatches.length}] ${m.teamHome} vs ${m.teamAway} — confirm in your UP extension…`;
       els.importResult.appendChild(lineEl);
 
       if (deadlineSeconds <= Math.floor(Date.now() / 1000)) {
-        lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — skipped (kickoff already passed)`;
+        lineEl.textContent = `[${i + 1}/${upcomingMatches.length}] ${m.teamHome} vs ${m.teamAway} — skipped (kickoff already passed)`;
         continue;
       }
 
       try {
         const tx = await contract.createMatch(m.teamHome, m.teamAway, deadlineSeconds);
-        lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — waiting for confirmation…`;
+        lineEl.textContent = `[${i + 1}/${upcomingMatches.length}] ${m.teamHome} vs ${m.teamAway} — waiting for confirmation…`;
         const receipt = await tx.wait();
 
         const event = receipt.logs
@@ -1479,12 +1508,12 @@
           .find((parsed) => parsed?.name === "MatchCreated");
 
         const contractMatchId = event ? event.args.matchId.toString() : "?";
-        lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — ✅ created with matchId ${contractMatchId}`;
+        lineEl.textContent = `[${i + 1}/${upcomingMatches.length}] ${m.teamHome} vs ${m.teamAway} — ✅ created with matchId ${contractMatchId}`;
 
         importedMapping.push({ contractMatchId, footballDataMatchId: m.footballDataMatchId, ...m });
       } catch (err) {
         console.error(err);
-        lineEl.textContent = `[${i + 1}/${UPCOMING_MATCHES_TO_IMPORT.length}] ${m.teamHome} vs ${m.teamAway} — ❌ ${parseContractError(err)}`;
+        lineEl.textContent = `[${i + 1}/${upcomingMatches.length}] ${m.teamHome} vs ${m.teamAway} — ❌ ${parseContractError(err)}`;
       }
     }
 
@@ -1492,31 +1521,77 @@
     summaryEl.style.marginTop = "16px";
     summaryEl.style.paddingTop = "16px";
     summaryEl.style.borderTop = "1px solid var(--line)";
-    summaryEl.innerHTML = "<strong>Done. Open the browser console to copy the full mapping (Ctrl+Shift+J / Cmd+Option+J).</strong>";
+
+    if (importedMapping.length > 0) {
+      // Aggiunge i nuovi match a CONFIG.MATCHES in memoria, così sono
+      // immediatamente visibili e pronti per essere salvati sul server
+      // con il bottone "Save matches data to server" qui sotto.
+      importedMapping.forEach((m) => {
+        CONFIG.MATCHES.push({
+          contractMatchId: Number(m.contractMatchId),
+          teamHome: m.teamHome,
+          teamAway: m.teamAway,
+          label: m.group,
+          kickoff: m.kickoff,
+          venue: "World Cup 2026",
+          footballDataMatchId: m.footballDataMatchId
+        });
+      });
+      renderHeaderFlags();
+      summaryEl.innerHTML = "<strong>Done. Now click \"Save matches data to server\" below to publish these new matches to the site.</strong>";
+    } else {
+      summaryEl.innerHTML = "<strong>Done, but no matches were created (all skipped or failed — see above).</strong>";
+    }
+
     els.importResult.appendChild(summaryEl);
-
-    console.log("=== MATCH_ID_MAPPING per oracle/reportResultBatch.js ===");
-    console.log("const MATCH_ID_MAPPING = {");
-    importedMapping.forEach((m) => {
-      console.log(`  ${m.contractMatchId}: ${m.footballDataMatchId}, // ${m.teamHome} vs ${m.teamAway}`);
-    });
-    console.log("};");
-
-    console.log("\n=== CONFIG.MATCHES per frontend/index.html ===");
-    importedMapping.forEach((m) => {
-      console.log(`  {
-    contractMatchId: ${m.contractMatchId},
-    teamHome: "${m.teamHome}",
-    teamAway: "${m.teamAway}",
-    label: "${m.group}",
-    kickoff: "${m.kickoff}",
-    venue: "World Cup 2026",
-    footballDataMatchId: ${m.footballDataMatchId}
-  },`);
-    });
 
     els.btnImportMatches.disabled = false;
     els.btnImportMatches.textContent = "Import matches from football-data.org";
+  });
+
+  els.btnSaveMatchesData.addEventListener("click", async () => {
+    els.btnSaveMatchesData.disabled = true;
+    els.saveMatchesResult.textContent = "Preparing data…";
+
+    try {
+      const matchIdMapping = {};
+      CONFIG.MATCHES.forEach((m) => {
+        if (m.footballDataMatchId) {
+          matchIdMapping[m.contractMatchId] = m.footballDataMatchId;
+        }
+      });
+
+      const timestamp = Date.now();
+      const message = `MatchPredictor admin update - ${timestamp}`;
+
+      els.saveMatchesResult.textContent = "Confirm the signature in your UP extension…";
+      const signature = await signer.signMessage(message);
+
+      els.saveMatchesResult.textContent = "Saving to server…";
+      const response = await fetch(CONFIG.MATCHES_DATA_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message,
+          signature,
+          matches: CONFIG.MATCHES,
+          matchIdMapping
+        })
+      });
+
+      const payload = await response.json();
+
+      if (payload.success) {
+        els.saveMatchesResult.textContent = "✅ Matches data saved. The site and oracle will now use this data automatically.";
+      } else {
+        els.saveMatchesResult.textContent = `❌ ${payload.error || "Unknown error"}`;
+      }
+    } catch (err) {
+      console.error(err);
+      els.saveMatchesResult.textContent = "❌ " + (err?.message || "Failed to save");
+    } finally {
+      els.btnSaveMatchesData.disabled = false;
+    }
   });
 
   els.btnConnect.addEventListener("click", connectUP);
@@ -1530,6 +1605,8 @@
         CONTRACT_ABI,
         new ethers.JsonRpcProvider(CONFIG.RPC_URL)
       );
+      await loadMatchesData();
+      renderHeaderFlags();
       await renderMatches();
     } catch (err) {
       console.warn("Initial read failed (normal if contract not yet deployed):", err);

@@ -1,0 +1,236 @@
+{
+  "matches": [
+    {
+      "contractMatchId": 1,
+      "teamHome": "Switzerland",
+      "teamAway": "Canada",
+      "label": "Group B",
+      "kickoff": "2026-06-24T19:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537337
+    },
+    {
+      "contractMatchId": 2,
+      "teamHome": "Morocco",
+      "teamAway": "Haiti",
+      "label": "Group C",
+      "kickoff": "2026-06-24T22:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537344
+    },
+    {
+      "contractMatchId": 3,
+      "teamHome": "Scotland",
+      "teamAway": "Brazil",
+      "label": "Group C",
+      "kickoff": "2026-06-24T22:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537343
+    },
+    {
+      "contractMatchId": 4,
+      "teamHome": "Czechia",
+      "teamAway": "Mexico",
+      "label": "Group A",
+      "kickoff": "2026-06-25T01:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537331
+    },
+    {
+      "contractMatchId": 5,
+      "teamHome": "South Africa",
+      "teamAway": "South Korea",
+      "label": "Group A",
+      "kickoff": "2026-06-25T01:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537332
+    },
+    {
+      "contractMatchId": 6,
+      "teamHome": "Ecuador",
+      "teamAway": "Germany",
+      "label": "Group E",
+      "kickoff": "2026-06-25T20:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537355
+    },
+    {
+      "contractMatchId": 7,
+      "teamHome": "Curaçao",
+      "teamAway": "Ivory Coast",
+      "label": "Group E",
+      "kickoff": "2026-06-25T20:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537356
+    },
+    {
+      "contractMatchId": 8,
+      "teamHome": "Tunisia",
+      "teamAway": "Netherlands",
+      "label": "GROUP_F",
+      "kickoff": "2026-06-25T23:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537361
+    },
+    {
+      "contractMatchId": 9,
+      "teamHome": "Japan",
+      "teamAway": "Sweden",
+      "label": "GROUP_F",
+      "kickoff": "2026-06-25T23:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537362
+    },
+    {
+      "contractMatchId": 10,
+      "teamHome": "Turkey",
+      "teamAway": "United States",
+      "label": "GROUP_D",
+      "kickoff": "2026-06-26T02:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537349
+    },
+    {
+      "contractMatchId": 11,
+      "teamHome": "Paraguay",
+      "teamAway": "Australia",
+      "label": "GROUP_D",
+      "kickoff": "2026-06-26T02:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537350
+    },
+    {
+      "contractMatchId": 12,
+      "teamHome": "Norway",
+      "teamAway": "France",
+      "label": "GROUP_I",
+      "kickoff": "2026-06-26T19:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537395
+    },
+    {
+      "contractMatchId": 13,
+      "teamHome": "Senegal",
+      "teamAway": "Iraq",
+      "label": "GROUP_I",
+      "kickoff": "2026-06-26T19:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537396
+    },
+    {
+      "contractMatchId": 14,
+      "teamHome": "Uruguay",
+      "teamAway": "Spain",
+      "label": "GROUP_H",
+      "kickoff": "2026-06-27T00:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537373
+    },
+    {
+      "contractMatchId": 15,
+      "teamHome": "Cape Verde Islands",
+      "teamAway": "Saudi Arabia",
+      "label": "GROUP_H",
+      "kickoff": "2026-06-27T00:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537374
+    },
+    {
+      "contractMatchId": 16,
+      "teamHome": "New Zealand",
+      "teamAway": "Belgium",
+      "label": "GROUP_G",
+      "kickoff": "2026-06-27T03:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537367
+    },
+    {
+      "contractMatchId": 17,
+      "teamHome": "Egypt",
+      "teamAway": "Iran",
+      "label": "GROUP_G",
+      "kickoff": "2026-06-27T03:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537368
+    },
+    {
+      "contractMatchId": 18,
+      "teamHome": "Panama",
+      "teamAway": "England",
+      "label": "GROUP_L",
+      "kickoff": "2026-06-27T21:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537413
+    },
+    {
+      "contractMatchId": 19,
+      "teamHome": "Croatia",
+      "teamAway": "Ghana",
+      "label": "GROUP_L",
+      "kickoff": "2026-06-27T21:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537414
+    },
+    {
+      "contractMatchId": 20,
+      "teamHome": "Colombia",
+      "teamAway": "Portugal",
+      "label": "GROUP_K",
+      "kickoff": "2026-06-27T23:30:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537407
+    },
+    {
+      "contractMatchId": 21,
+      "teamHome": "Congo DR",
+      "teamAway": "Uzbekistan",
+      "label": "GROUP_K",
+      "kickoff": "2026-06-27T23:30:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537408
+    },
+    {
+      "contractMatchId": 22,
+      "teamHome": "Jordan",
+      "teamAway": "Argentina",
+      "label": "GROUP_J",
+      "kickoff": "2026-06-28T02:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537401
+    },
+    {
+      "contractMatchId": 23,
+      "teamHome": "Algeria",
+      "teamAway": "Austria",
+      "label": "GROUP_J",
+      "kickoff": "2026-06-28T02:00:00Z",
+      "venue": "World Cup 2026",
+      "footballDataMatchId": 537402
+    }
+  ],
+  "matchIdMapping": {
+    "1": 537337,
+    "2": 537344,
+    "3": 537343,
+    "4": 537331,
+    "5": 537332,
+    "6": 537355,
+    "7": 537356,
+    "8": 537361,
+    "9": 537362,
+    "10": 537349,
+    "11": 537350,
+    "12": 537395,
+    "13": 537396,
+    "14": 537373,
+    "15": 537374,
+    "16": 537367,
+    "17": 537368,
+    "18": 537413,
+    "19": 537414,
+    "20": 537407,
+    "21": 537408,
+    "22": 537401,
+    "23": 537402
+  }
+}

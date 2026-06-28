@@ -56,6 +56,16 @@ contract MatchPredictor is LSP8Mintable {
     uint256 public nextMatchId;
     uint256 private nextTokenId;
 
+    /// @notice Chiave dati custom (keccak256("MatchPredictorTokenStory")) usata per
+    ///         congelare on-chain i dettagli della partita vinta da ogni singolo token,
+    ///         tramite setDataForTokenId(). Formato valore: stringa UTF-8 concatenata
+    ///         "matchId|teamHome|teamAway|result", dove result è 1=Home, 2=Draw, 3=Away.
+    ///         Scelta deliberatamente come stringa semplice (non JSON/IPFS) per evitare
+    ///         dipendenze da servizi esterni nel percorso critico del mint: il frontend
+    ///         decodifica direttamente questa stringa per mostrare il "certificato" della
+    ///         vittoria, senza bisogno di andare a recuperare nulla fuori dalla chain.
+    bytes32 public constant TOKEN_STORY_KEY = 0xc345e2857e55742bc896212b499925391cc94c97152776066ccf64e4df74ee09;
+
     // --- Eventi (fondamentali per lo storico leggibile da frontend/explorer) ---
 
     event MatchCreated(uint256 indexed matchId, string teamHome, string teamAway, uint256 predictionDeadline);
@@ -232,7 +242,39 @@ contract MatchPredictor is LSP8Mintable {
         bytes32 tokenId = bytes32(nextTokenId++);
         _mint(msg.sender, tokenId, true, "");
 
+        // Congela on-chain i dettagli della vittoria, per-token, leggibili
+        // indipendentemente da qualsiasi servizio esterno o stato futuro del contratto.
+        string memory story = string.concat(
+            _toString(matchId),
+            "|",
+            m.teamHome,
+            "|",
+            m.teamAway,
+            "|",
+            _toString(uint256(m.actualResult))
+        );
+        _setDataForTokenId(tokenId, TOKEN_STORY_KEY, bytes(story));
+
         emit PrizeClaimed(matchId, msg.sender, tokenId);
+    }
+
+    /// @dev Conversione minimale uint256 -> string decimale, senza dipendenze esterne
+    ///      (evita di importare l'intera libreria OpenZeppelin Strings solo per questo).
+    function _toString(uint256 value) internal pure returns (string memory) {
+        if (value == 0) return "0";
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + (value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
     }
 
     // --- Amministrazione oracolo ---
